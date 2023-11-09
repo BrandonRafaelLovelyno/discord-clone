@@ -15,9 +15,17 @@ const options: NextAuthOptions = {
     async signIn({ account, profile }) {
       return true;
     },
+    async jwt({ token, user }) {
+      const userDoc = await prismadb.user.findUnique({
+        where: {
+          email: token.email!,
+        },
+      });
+      token.userId = userDoc?.id || "";
+      return token;
+    },
     async session({ session, token, user }) {
-      console.log("session callback");
-      console.log(session, token, user);
+      session.user.userId = token.userId as string;
       return session;
     },
   },

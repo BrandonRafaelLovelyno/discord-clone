@@ -48,8 +48,8 @@ model VerificationToken {
 }
 
 model Profile {
-  id String @id @default(uuid()) @db.ObjectId @map("_id")
-  userId String @unique
+  id String @id @default(auto()) @db.ObjectId @map("_id")
+  userId String @unique @db.ObjectId
   name String
   imageUrl String 
   email String 
@@ -63,7 +63,7 @@ model Profile {
 }
 
 model Server {
-  id String @id @map("_id") @db.ObjectId @default(uuid())
+  id String @id @map("_id") @db.ObjectId @default(auto())
   name String
   imageUrl String 
   inviteCode String @unique
@@ -87,7 +87,7 @@ enum MemberRole {
 }
 
 model Member {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId 
+  id String @id @default(auto()) @map("_id") @db.ObjectId 
   role MemberRole @default(GUEST)
 
   profileId String @db.ObjectId
@@ -116,7 +116,7 @@ enum ChannelType {
 }
 
 model Channel {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId 
+  id String @id @default(auto()) @map("_id") @db.ObjectId 
   name String
   type ChannelType @default(TEXT)
 
@@ -136,7 +136,7 @@ model Channel {
 }
 
 model Message {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId 
+  id String @id @default(auto()) @map("_id") @db.ObjectId 
   content String 
 
   fileUrl String? 
@@ -157,7 +157,7 @@ model Message {
 }
 
 model Conversation {
-  id String @id @default(uuid()) @map("_id") @db.ObjectId 
+  id String @id @default(auto()) @map("_id") @db.ObjectId 
 
   memberOneId String @db.ObjectId
   memberOne Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
@@ -173,7 +173,7 @@ model Conversation {
 }
 
 model DirectMessage { 
-  id String @id @default(uuid()) @map("_id") @db.ObjectId 
+  id String @id @default(auto()) @map("_id") @db.ObjectId 
   content String 
   fileUrl String? 
 
