@@ -17,7 +17,6 @@ export async function GET(req: Request) {
     if (!currentUser) {
       throw new Error("Unauthorized");
     }
-    console.log("current user", currentUser);
     const newProfile = await prismadb.profile.upsert({
       where: {
         userId: currentUser.id,

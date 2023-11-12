@@ -46,3 +46,49 @@ export async function POST(req: Request) {
     });
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const url = new URL(req.url);
+    const profileId = url.searchParams.get("profileId");
+
+    if (!profileId) {
+      throw new Error("Missing field");
+    }
+
+    const session = await getServerSession(options);
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
+    if (session.user.userId !== profileId) {
+      throw new Error("Unauthorized");
+    }
+
+    console.log(profileId);
+
+    const server = await prismadb.server.findMany({
+      where: {
+        members: {
+          some: {
+            id: profileId,
+          },
+        },
+      },
+    });
+
+    console.log("server :", server);
+
+    return NextResponse.json({
+      message: "",
+      success: true,
+      data: server,
+    });
+  } catch (err) {
+    return NextResponse.json({
+      message: (err as Error).message,
+      success: false,
+      data: {},
+    });
+  }
+}

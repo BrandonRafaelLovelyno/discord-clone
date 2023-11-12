@@ -13,7 +13,6 @@ export default function Home() {
     if (setUpLoading) {
       return <Loader width={200} height={200} />;
     } else {
-      console.log(setUpData);
       if (setUpData?.success) {
         if (setUpData.data) {
           return redirect(`/server/${setUpData.data.id}`);

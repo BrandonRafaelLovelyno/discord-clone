@@ -8,6 +8,8 @@ import options from "@/lib/auth/option";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
 import { ThemeToggler } from "@/components/theme-toggler";
+import MotionDivPage from "@/components/animation/motion-div-page";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,8 +40,27 @@ export default async function RootLayout({
             enableSystem={false}
           >
             <AnimatePresence>
-              <ThemeToggler />
-              {children}
+              {/* <ThemeToggler /> */}
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  className: "",
+                  duration: 5000,
+                  style: {
+                    background: "#363636",
+                    color: "#fff",
+                  },
+                }}
+              />
+              <main className="w-full h-full overflow-hidden">
+                <MotionDivPage className="w-full h-full">
+                  {children}
+                </MotionDivPage>
+              </main>
             </AnimatePresence>
           </ThemeProvider>
         </body>

@@ -9,6 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
@@ -22,6 +24,8 @@ import {
 } from "../ui/form";
 import { Button } from "../ui/button";
 import FileUpload from "../file-upload";
+import ServerResponse from "@/lib/types/api response/server-response";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Your server needs a name" }),
@@ -29,8 +33,25 @@ const formSchema = z.object({
 });
 
 const InitialModal = () => {
+  const router = useRouter();
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  const onSumbit = async (values: z.infer<typeof formSchema>) => {};
+  const onSumbit = async (values: z.infer<typeof formSchema>) => {
+    console.log("on submit called");
+    try {
+      const res = await axios.post<ServerResponse>("/api/server", values);
+      if (!res.data.success) {
+        throw new Error(res.data.message);
+      }
+      toast.success(`Welcome to ${res.data.data.name} server`);
+      setTimeout(() => {
+        form.reset();
+        router.refresh();
+        window.location.reload();
+      }, 100);
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
+  };
   const form = useForm({
     defaultValues: {
       name: "",
@@ -97,7 +118,9 @@ const InitialModal = () => {
               />
             </div>
             <DialogFooter className="px-3 py-5 mt-10 bg-stone-900">
-              <Button type="submit">Create</Button>
+              <Button variant="primary" disabled={form.formState.isSubmitting}>
+                Create
+              </Button>
             </DialogFooter>
           </form>
         </FormProvider>

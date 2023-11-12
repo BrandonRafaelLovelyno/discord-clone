@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prismadb from "@/lib/orm/prismadb";
+import { use } from "react";
 
 const options: NextAuthOptions = {
   adapter: PrismaAdapter(prismadb),
@@ -21,11 +22,19 @@ const options: NextAuthOptions = {
           email: token.email!,
         },
       });
-      token.userId = userDoc?.id || "";
+      if (!userDoc) {
+        throw new Error("Unauthorized");
+      }
+      const profileDoc = await prismadb.profile.findUnique({
+        where: {
+          userId: userDoc.id,
+        },
+      });
+      token.profileId = profileDoc?.id || "";
       return token;
     },
     async session({ session, token, user }) {
-      session.user.userId = token.userId as string;
+      session.user.profileId = token.profileId as string;
       return session;
     },
   },

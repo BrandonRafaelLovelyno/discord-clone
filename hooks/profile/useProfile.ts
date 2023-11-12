@@ -1,9 +1,9 @@
 import fetcher from "@/lib/fetcher";
-import ProfileResponse from "@/lib/types/api/profile-response";
+import { S_ProfileResponse } from "@/lib/types/api response/profile-response";
 import useSwr from "swr";
 
 const useProfile = () => {
-  const { data, isLoading, mutate } = useSwr<ProfileResponse>(
+  const { data, isLoading, mutate } = useSwr<S_ProfileResponse>(
     "/api/profile",
     fetcher
   );

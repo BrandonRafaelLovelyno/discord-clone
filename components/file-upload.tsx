@@ -37,7 +37,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
           className="rounded-full"
         />
         <button
-          className="absolute flex items-center justify-center w-8 h-8 bg-red-500 rounded-full -top-2 -right-2"
+          className="absolute flex items-center justify-center w-3 h-3 bg-red-500 rounded-full -top-2 -right-2"
           onClick={() => onChange("")}
         >
           <X />
