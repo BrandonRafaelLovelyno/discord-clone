@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     }
     const profile = await prismadb.profile.findUnique({
       where: {
-        userId: session.user.userId,
+        id: session.user.profileId,
       },
     });
     if (!profile) {
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         },
       },
     });
-    return NextResponse.json({ message: "", success: true, newServer });
+    return NextResponse.json({ message: "", success: true, data: newServer });
   } catch (err) {
     return NextResponse.json({
       message: (err as Error).message,
@@ -61,7 +61,7 @@ export async function GET(req: Request) {
       throw new Error("Unauthorized");
     }
 
-    if (session.user.userId !== profileId) {
+    if (session.user.profileId !== profileId) {
       throw new Error("Unauthorized");
     }
 

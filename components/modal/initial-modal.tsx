@@ -24,7 +24,7 @@ import {
 } from "../ui/form";
 import { Button } from "../ui/button";
 import FileUpload from "../file-upload";
-import ServerResponse from "@/lib/types/api response/server-response";
+import { S_ServerResponse } from "@/lib/types/api response/server-response";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -38,7 +38,7 @@ const InitialModal = () => {
   const onSumbit = async (values: z.infer<typeof formSchema>) => {
     console.log("on submit called");
     try {
-      const res = await axios.post<ServerResponse>("/api/server", values);
+      const res = await axios.post<S_ServerResponse>("/api/server", values);
       if (!res.data.success) {
         throw new Error(res.data.message);
       }
@@ -47,7 +47,7 @@ const InitialModal = () => {
         form.reset();
         router.refresh();
         window.location.reload();
-      }, 100);
+      }, 200);
     } catch (err) {
       toast.error((err as Error).message);
     }

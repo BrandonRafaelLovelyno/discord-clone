@@ -18,7 +18,7 @@ export default function MainLayout({
     if (sessionStatus !== "authenticated") {
       return <></>;
     } else {
-      return <Sidebar userId={session.user.userId} />;
+      return <Sidebar profileId={session.user.profileId} />;
     }
   }, [sessionStatus]);
   if (sessionStatus == "unauthenticated") {

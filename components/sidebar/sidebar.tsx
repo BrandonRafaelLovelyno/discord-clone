@@ -9,15 +9,15 @@ import { M_ServerResponse } from "@/lib/types/api response/server-response";
 import SidebarItem from "./sidebar-item";
 
 interface SidebarProps {
-  userId: string;
+  profileId: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ userId }) => {
+const Sidebar: React.FC<SidebarProps> = ({ profileId }) => {
   const {
     data: serverData,
     isLoading: serverLoading,
     mutate,
-  } = useServer({ profileId: userId });
+  } = useServer({ profileId });
   if (serverLoading || !serverData?.data) {
     return <></>;
   }
