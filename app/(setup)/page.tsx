@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import Loader from "@/components/loader/loader";
 import { useMemo } from "react";
-import useSetUp from "@/hooks/setup/useSetUp";
+import useSetUp from "@/hooks/fetching/setup/useSetUp";
 import InitialModal from "@/components/modal/initial-modal";
 import { signIn, useSession } from "next-auth/react";
 

@@ -1,10 +1,10 @@
-import { Prisma } from "@prisma/client";
+import { Server } from "@prisma/client";
 import APIResponse from "./api-response";
 
 export interface S_ServerResponse extends APIResponse {
-  data: Prisma.ServerSelect;
+  data: Server;
 }
 
 export interface M_ServerResponse extends APIResponse {
-  data: Prisma.ServerSelect[];
+  data: Server[];
 }

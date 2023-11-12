@@ -71,7 +71,7 @@ export async function GET(req: Request) {
       where: {
         members: {
           some: {
-            id: profileId,
+            profileId,
           },
         },
       },

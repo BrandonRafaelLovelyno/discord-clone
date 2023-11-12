@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/provider/session-provider";
 import { getServerSession } from "next-auth";
-import AnimatePresence from "@/components/animate-presence";
+import AnimatePresence from "@/components/animation/animate-presence";
 import options from "@/lib/auth/option";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
@@ -30,7 +30,7 @@ export default async function RootLayout({
         <body
           className={cn(
             inter.className,
-            "dark:bg-slate-900 light:bg-whtie",
+            "dark:bg-slate-900 bg-white",
             "flex flex-col"
           )}
         >
