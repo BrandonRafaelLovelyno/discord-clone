@@ -2,20 +2,20 @@
 
 import useServer from "@/hooks/fetching/server/useServer";
 import React from "react";
-import MotionDivPage from "../animation/motion-div-page";
-import SidebarAction from "./sidebar-action";
-import { M_ServerResponse } from "@/lib/types/api response/server-response";
-import SidebarItem from "./sidebar-item";
+import NavigationAction from "./navigation-action";
+import { M_ServerResponse } from "@/lib/types/api-response";
+import NavigationItem from "./navigation-item";
 import ActionTooltip from "../action-tooltip";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { ThemeToggler } from "../theme-toggler";
+import MotionDivUp from "../animation/motion-div-up";
 
-interface SidebarProps {
+interface NavigationBarProps {
   profileId: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ profileId }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ profileId }) => {
   const {
     data: serverData,
     isLoading: serverLoading,
@@ -25,23 +25,26 @@ const Sidebar: React.FC<SidebarProps> = ({ profileId }) => {
     return <></>;
   }
   return (
-    <MotionDivPage className="flex flex-col items-center w-full h-full px-2 py-5 gap-y-5 ">
+    <MotionDivUp
+      className="flex flex-col items-center w-full h-full px-2 py-5 gap-y-5 "
+      key="server sidebar"
+    >
       <ActionTooltip label="Create server" align="center" side="right">
-        <SidebarAction />
+        <NavigationAction />
       </ActionTooltip>
       <Separator className="h-[2px] bg-zinc-300 dark:bg-zinc-700 rounded-md w-10 mx-auto" />
       <ScrollArea className="flex flex-col items-center h-full">
-        <div className="flex-1">
+        <div className="flex flex-col flex-1 gap-y-4">
           {(serverData as M_ServerResponse).data.map((s) => (
-            <SidebarItem server={s} key={s.id} />
+            <NavigationItem server={s} key={s.id} />
           ))}
         </div>
         <div className="justify-end">
           <ThemeToggler />
         </div>
       </ScrollArea>
-    </MotionDivPage>
+    </MotionDivUp>
   );
 };
 
-export default Sidebar;
+export default NavigationBar;

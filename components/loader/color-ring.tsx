@@ -4,12 +4,12 @@ import React from "react";
 import { motion as m } from "framer-motion";
 import { ColorRing } from "react-loader-spinner";
 
-interface LoaderProps {
+interface ColorRingLoaderProps {
   height: number;
   width: number;
 }
 
-const Loader: React.FC<LoaderProps> = ({ height, width }) => {
+const ColorRingLoader: React.FC<ColorRingLoaderProps> = ({ height, width }) => {
   return (
     <div className="flex items-center justify-center w-full h-full overflow-hidden">
       <m.div
@@ -38,4 +38,4 @@ const Loader: React.FC<LoaderProps> = ({ height, width }) => {
   );
 };
 
-export default Loader;
+export default ColorRingLoader;

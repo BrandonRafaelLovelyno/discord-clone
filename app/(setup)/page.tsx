@@ -1,7 +1,7 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import Loader from "@/components/loader/loader";
+import ColorRingLoader from "@/components/loader/color-ring";
 import { useMemo } from "react";
 import useSetUp from "@/hooks/fetching/setup/useSetUp";
 import InitialModal from "@/components/modal/initial-modal";
@@ -11,7 +11,7 @@ export default function Home() {
   const { data: setUpData, isLoading: setUpLoading, mutate } = useSetUp();
   const body: React.ReactElement = useMemo(() => {
     if (setUpLoading) {
-      return <Loader width={200} height={200} />;
+      return <ColorRingLoader width={200} height={200} />;
     } else {
       if (setUpData?.success) {
         if (setUpData.data) {

@@ -1,3 +1,4 @@
+import MotionDivUp from "@/components/animation/motion-div-up";
 import prismadb from "@/lib/orm/prismadb";
 import React from "react";
 
@@ -8,7 +9,7 @@ const ServerPage = async ({ params }: { params: { serverId: string } }) => {
     },
   });
   console.log(server);
-  return <div>{server?.name}</div>;
+  return <MotionDivUp delay={0.5}>{server?.name}</MotionDivUp>;
 };
 
 export default ServerPage;

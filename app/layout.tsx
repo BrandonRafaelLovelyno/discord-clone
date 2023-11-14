@@ -7,9 +7,9 @@ import AnimatePresence from "@/components/animation/animate-presence";
 import options from "@/lib/auth/option";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
-import { ThemeToggler } from "@/components/theme-toggler";
 import MotionDivPage from "@/components/animation/motion-div-page";
 import { Toaster } from "react-hot-toast";
+import ModalProvider from "@/components/provider/modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -56,8 +56,9 @@ export default async function RootLayout({
                   },
                 }}
               />
-              <main className="w-full h-full overflow-hidden">
+              <main className="relative w-full h-full overflow-hidden">
                 <MotionDivPage className="w-full h-full">
+                  <ModalProvider />
                   {children}
                 </MotionDivPage>
               </main>

@@ -7,15 +7,15 @@ import ActionTooltip from "../action-tooltip";
 import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-interface SidebarItemProps {
+interface NavigationItemProps {
   server: Server;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ server }) => {
+const NavigationItem: React.FC<NavigationItemProps> = ({ server }) => {
   const params = useParams();
   const router = useRouter();
   const onClick = () => {
-    router.push(`server/${server.id}`);
+    router.push(`/server/${server.id}`);
   };
   return (
     <div
@@ -27,14 +27,14 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ server }) => {
           "transition-all duration-150 w-[6px] rounded-t-lg rounded-b-lg",
           params?.serverId == server.id && "h-[50px] bg-white",
           params?.serverId != server.id &&
-            "h-[10px] group-hover:bg-white bg-gray-500"
+            "h-[10px] group-hover:bg-gray-300 bg-gray-500 group-hover:h-[30px]"
         )}
       />
       <ActionTooltip
         align="center"
         side="right"
         label={server.name}
-        className="w-[50px] h-[50px] relative rounded-2xl overflow-hidden"
+        className="w-[50px] h-[50px] relative rounded-full overflow-hidden"
       >
         <button className="w-full h-full">
           <Image fill alt={`${server.name} image`} src={server.imageUrl} />
@@ -44,4 +44,4 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ server }) => {
   );
 };
 
-export default SidebarItem;
+export default NavigationItem;

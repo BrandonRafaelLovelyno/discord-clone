@@ -1,3 +1,4 @@
+import { Server } from "@prisma/client";
 import { create } from "zustand";
 
 export type ModalType =
@@ -13,16 +14,24 @@ export type ModalType =
   | "messageFile"
   | "deleteMessage";
 
+interface ModalData {
+  server?: Server;
+}
+
 interface ModalStore {
-  onOpen: (type: ModalType) => void;
+  onOpen: (type: ModalType, data?: ModalData) => void;
   isOpen: boolean;
   type: ModalType;
+  data: ModalData;
   onClose: () => void;
 }
 
-const useServerModal = create<ModalStore>((set) => ({
+const useModal = create<ModalStore>((set) => ({
+  data: {},
   isOpen: false,
   onClose: () => set({ isOpen: false }),
-  onOpen: (type) => set({ type, isOpen: true }),
+  onOpen: (type, data = {}) => set({ type, isOpen: true, data }),
   type: "createServer",
 }));
+
+export default useModal;

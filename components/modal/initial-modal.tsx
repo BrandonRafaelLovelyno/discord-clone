@@ -24,8 +24,8 @@ import {
 } from "../ui/form";
 import { Button } from "../ui/button";
 import FileUpload from "../file-upload";
-import { S_ServerResponse } from "@/lib/types/api response/server-response";
 import { useRouter } from "next/navigation";
+import { S_ServerResponse } from "@/lib/types/api-response";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Your server needs a name" }),
