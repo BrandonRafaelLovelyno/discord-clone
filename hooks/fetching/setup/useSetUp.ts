@@ -1,5 +1,5 @@
 import fetcher from "@/lib/fetcher";
-import { S_ServerResponse } from "@/lib/types/api response/server-response";
+import { S_ServerResponse } from "@/lib/types/api-response";
 import useSwr from "swr";
 
 const useSetUp = () => {

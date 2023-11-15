@@ -45,10 +45,15 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
     if (serverLoading || !serverData?.data) {
       return [];
     } else {
+      console.log(serverData.message);
       const server = (serverData as S_ServerWithRoleResponse).data.server;
+      console.log(server);
       const text: Channel[] = [];
       const audio: Channel[] = [];
       const video: Channel[] = [];
+      if (server.channels.length == 0) {
+        return [];
+      }
       server.channels.map((ch) => {
         if (ch.type === "AUDIO") {
           audio.push(ch);
