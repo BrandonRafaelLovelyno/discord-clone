@@ -52,7 +52,6 @@ export async function GET(
       throw new Error("Not a member");
     }
     const role = server.members.find((m) => m.profileId === profile.id)?.role;
-    console.log("channel problem", server);
     return NextResponse.json({
       data: { server, role },
       success: true,

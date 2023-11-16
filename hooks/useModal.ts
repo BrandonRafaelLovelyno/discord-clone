@@ -1,3 +1,4 @@
+import { ServerWithChannelWithMemberWithProfile } from "@/lib/types/collection";
 import { Server } from "@prisma/client";
 import { create } from "zustand";
 

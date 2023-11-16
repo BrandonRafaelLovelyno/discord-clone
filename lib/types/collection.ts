@@ -6,5 +6,5 @@ export type ServerWithMemberwithProfile = Server & {
 
 export type ServerWithChannelWithMemberWithProfile = Server & {
   channels: Channel[];
-  members: Member[] & { profile: Profile };
+  members: (Member & { profile: Profile })[];
 };

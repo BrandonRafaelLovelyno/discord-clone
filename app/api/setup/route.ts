@@ -28,7 +28,7 @@ export async function GET(req: Request) {
         userId: currentUser.id,
       },
       update: {
-        name: currentUser.email || "",
+        name: currentUser.name || "",
         imageUrl: currentUser.image || "",
       },
     });
