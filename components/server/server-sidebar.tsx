@@ -40,14 +40,12 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
         </MotionDivUp>
       );
     }
-  }, [serverLoading]);
+  }, [serverLoading, serverData]);
   const [textChannel, audioChannel, videoChannel] = useMemo(() => {
     if (serverLoading || !serverData?.data) {
       return [];
     } else {
-      console.log(serverData.message);
       const server = (serverData as S_ServerWithRoleResponse).data.server;
-      console.log(server);
       const text: Channel[] = [];
       const audio: Channel[] = [];
       const video: Channel[] = [];

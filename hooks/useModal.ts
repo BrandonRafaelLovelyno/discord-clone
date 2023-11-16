@@ -16,7 +16,7 @@ export type ModalType =
   | "deleteMessage";
 
 interface ModalData {
-  server?: Server;
+  server?: ServerWithChannelWithMemberWithProfile;
 }
 
 interface ModalStore {

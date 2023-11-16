@@ -94,6 +94,7 @@ const InitialModal = () => {
                           endpoint="serverImage"
                           onChange={field.onChange}
                           value={field.value}
+                          isSubmitting={form.formState.isSubmitting}
                         />
                       </FormControl>
                     </div>

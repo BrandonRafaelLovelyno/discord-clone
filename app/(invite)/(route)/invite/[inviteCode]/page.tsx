@@ -24,25 +24,22 @@ const InvitePage = async ({ params }: { params: { inviteCode: string } }) => {
       `/server/${joinedServer.id}?profileId=${session.user.profileId}`
     );
   }
-  const server = await prismadb.server.findUnique({
+  const updatedServer = await prismadb.server.update({
     where: {
       inviteCode: params.inviteCode,
     },
-  });
-  if (server) {
-    const updatedServer = await prismadb.server.update({
-      where: {
-        inviteCode: params.inviteCode,
-      },
-      data: {
-        members: {
-          create: {
-            profileId: session.user.profileId,
-          },
+    data: {
+      members: {
+        create: {
+          profileId: session.user.profileId,
         },
       },
-    });
-    return redirect(`/server/${server.id}?profileId=${session.user.profileId}`);
+    },
+  });
+  if (updatedServer) {
+    return redirect(
+      `/server/${updatedServer.id}?profileId=${session.user.profileId}`
+    );
   }
   return redirect("/");
 };

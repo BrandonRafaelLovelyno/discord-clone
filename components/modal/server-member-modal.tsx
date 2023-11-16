@@ -22,6 +22,7 @@ import useServer from "@/hooks/fetching/server/useServer";
 import {
   APIResponse,
   S_ServerResponse,
+  S_ServerWithChannelWithProfileResponse,
   S_ServerWithRoleResponse,
 } from "@/lib/types/api-response";
 import { ScrollArea } from "../ui/scroll-area";
@@ -29,10 +30,12 @@ import LineWaveLoader from "../loader/line-wave";
 import {
   Check,
   MoreVerticalIcon,
-  Shield,
   ShieldAlert,
   ShieldCheck,
+  ShieldCheckIcon,
   ShieldQuestion,
+  Skull,
+  User2,
 } from "lucide-react";
 import {
   DropdownMenuSub,
@@ -54,12 +57,33 @@ const ServerMemberModal = () => {
   const modal = useModal();
   const { mutate } = useSWRConfig();
   const [loadingId, setLoadingId] = useState<string>("");
-  const { data, isLoading } = useServer({ serverId: modal.data.server?.id! });
-  const onChangeRole = async (memberId: string, role: MemberRole) => {
+  const onKick = async (memberId: string, name: string) => {
     try {
       setLoadingId(memberId);
-      const res = await axios.patch<S_ServerResponse>(
-        `/api/member/${modal.data.server?.id}?memberId=${memberId}`,
+      const res = await axios.post<S_ServerWithChannelWithProfileResponse>(
+        `/api/member/kick/${modal.data.server?.id}?memberId=${memberId}`
+      );
+      if (!res.data.success) {
+        throw new Error(res.data.message);
+      }
+      mutate(`/api/server/${modal.data.server?.id}`);
+      modal.onOpen("members", { server: res.data.data });
+      toast.success(`You have kicked ${name}`);
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setLoadingId("");
+    }
+  };
+  const onChangeRole = async (
+    memberId: string,
+    role: MemberRole,
+    name: string
+  ) => {
+    try {
+      setLoadingId(memberId);
+      const res = await axios.patch<S_ServerWithChannelWithProfileResponse>(
+        `/api/member/role/${modal.data.server?.id}?memberId=${memberId}`,
         {
           role,
         }
@@ -69,31 +93,21 @@ const ServerMemberModal = () => {
       }
       mutate(`/api/server/${modal.data.server?.id}`);
       modal.onOpen("members", { server: res.data.data });
-      toast.success("Role changed");
+      toast.success(`You have changed ${name}'s role`);
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
       setLoadingId("");
     }
   };
-  const serverData = useMemo(() => {
-    if (isLoading || !data) {
-      return null;
-    } else {
-      if (data.success) {
-        return (data as S_ServerWithRoleResponse).data.server;
-      } else {
-        return null;
-      }
-    }
-  }, [isLoading, data]);
   const [description, body] = useMemo(() => {
-    if (!serverData) {
+    if (!modal.data.server) {
       return [null, null];
-    } else {
-      const bod = (
-        <div className="flex flex-col justify-center w-full pt-3 gap-y-5">
-          {serverData.members.map((m) => (
+    }
+    const bod = (
+      <div className="flex flex-col justify-center w-full pt-3 gap-y-5">
+        {modal.data.server.members.map((m) => (
+          <MotionDivUp key={m.id}>
             <div className="flex flex-row items-center justify-start w-full gap-x-2">
               <ProfileAvatar imageUrl={m.profile.imageUrl} />
               <div className="flex flex-col text-sm gap-y-1">
@@ -106,7 +120,7 @@ const ServerMemberModal = () => {
               <div className="ml-auto mr-5">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    {serverData.profileId !== m.profileId &&
+                    {modal.data.server!.profileId !== m.profileId &&
                       loadingId !== m.id && (
                         <MotionDivUp key={`${m.id}-vertical`}>
                           <MoreVerticalIcon className="h-5" />
@@ -120,44 +134,55 @@ const ServerMemberModal = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="left">
                     <DropdownMenuSub>
-                      <DropdownMenuSubTrigger className="flex items-center justify-center w-full py-2">
-                        <ShieldQuestion className="w-4 h-4 mr-2" />
+                      <DropdownMenuSubTrigger className="flex items-center justify-center w-full py-2 gap-x-2">
+                        <ShieldQuestion className="w-4 h-4" />
                         <span>Role</span>
                       </DropdownMenuSubTrigger>
                       <DropdownMenuSubContent>
                         <DropdownMenuItem
-                          className="z-10 cursor-pointer bg-stone-800"
-                          onClick={() => onChangeRole(m.id, "GUEST")}
+                          className="z-10 flex items-center justify-center py-2 cursor-pointer bg-stone-800 gap-x-2"
+                          onClick={() =>
+                            onChangeRole(m.id, "GUEST", m.profile.name)
+                          }
                         >
-                          <Shield className="w-4 h-4 mr-2" />
-                          Guest
+                          <User2 className="w-4 h-4 mr-2" />
+                          <span>Guest</span>
                           {m.role === "GUEST" && (
                             <Check className="w-4 h-4 ml-auto" />
                           )}
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="z-10 cursor-pointer bg-stone-800"
-                          onClick={() => onChangeRole(m.id, "MODERATOR")}
+                          className="z-10 flex items-center justify-center py-2 cursor-pointer bg-stone-800 gap-x-2"
+                          onClick={() =>
+                            onChangeRole(m.id, "MODERATOR", m.profile.name)
+                          }
                         >
-                          <Shield className="w-4 h-4 mr-2" />
-                          Moderator
+                          <ShieldCheckIcon className="w-4 h-4" />
+                          <span>Moderator</span>
                           {m.role === "MODERATOR" && (
                             <Check className="w-4 h-4 ml-auto" />
                           )}
                         </DropdownMenuItem>
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
+                    <DropdownMenuItem
+                      className="flex items-center justify-center py-2 cursor-pointer gap-x-2"
+                      onClick={() => onKick(m.id, m.profile.name)}
+                    >
+                      <Skull className="w-4 h-4" />
+                      <span>Kick</span>
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
-          ))}
-        </div>
-      );
-      const desc = <p>{serverData.members.length} members</p>;
-      return [desc, bod];
-    }
-  }, [serverData, loadingId]);
+          </MotionDivUp>
+        ))}
+      </div>
+    );
+    const desc = <p>{modal.data.server.members.length} members</p>;
+    return [desc, bod];
+  }, [modal.data.server]);
   return (
     <Dialog
       open={modal.isOpen && modal.type == "members"}

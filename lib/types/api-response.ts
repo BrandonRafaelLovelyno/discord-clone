@@ -23,6 +23,10 @@ export interface M_ServerResponse extends APIResponse {
   data: Server[];
 }
 
+export interface S_ServerWithChannelWithProfileResponse extends APIResponse {
+  data: ServerWithChannelWithMemberWithProfile;
+}
+
 export interface S_ServerWithRoleResponse extends APIResponse {
   data: { server: ServerWithChannelWithMemberWithProfile; role: MemberRole };
 }

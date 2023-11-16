@@ -7,8 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -70,7 +68,12 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
           </DropdownMenuItem>
         )}
         {isModerator && (
-          <DropdownMenuItem className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3">
+          <DropdownMenuItem
+            className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3"
+            onClick={() =>
+              modal.onOpen("createChannel", { server: usedServer })
+            }
+          >
             Create Channel
             <PlusCircle className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
