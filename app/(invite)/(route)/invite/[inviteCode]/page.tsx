@@ -2,7 +2,6 @@ import options from "@/lib/auth/option";
 import prismadb from "@/lib/orm/prismadb";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import React from "react";
 
 const InvitePage = async ({ params }: { params: { inviteCode: string } }) => {
   console.log("on server sir");

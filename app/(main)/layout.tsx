@@ -23,10 +23,6 @@ export default function MainLayout({
     return redirect("/");
   }
 
-  if (sessionStatus == "loading") {
-    return;
-  }
-
   return (
     <MotionDivPage className="flex flex-row w-full h-full">
       <div className="max-md:hidden h-full w-[75px] dark:bg-[#1E1F22] bg-[#E3E5E8]">

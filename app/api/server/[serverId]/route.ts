@@ -66,3 +66,65 @@ export async function GET(
     });
   }
 }
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { serverId: string } }
+) {
+  try {
+    const session = await getServerSession(options);
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+    const { name, imageUrl } = await req.json();
+    if (!name || (name as string).length < 1) {
+      throw new Error("Unproper fields");
+    }
+    let updatedServer = null;
+    if (!imageUrl) {
+      updatedServer = await prismadb.server.update({
+        where: {
+          id: params.serverId,
+          members: {
+            some: {
+              profileId: session.user.profileId,
+            },
+          },
+        },
+        data: {
+          name,
+        },
+      });
+    } else {
+      updatedServer = await prismadb.server.update({
+        where: {
+          id: params.serverId,
+          members: {
+            some: {
+              profileId: session.user.profileId,
+            },
+          },
+        },
+        data: {
+          name,
+          imageUrl,
+        },
+      });
+    }
+    if (!updatedServer) {
+      throw new Error("Server not found");
+    }
+    console.log("returned", updatedServer);
+    return NextResponse.json({
+      success: true,
+      message: "",
+      data: updatedServer,
+    });
+  } catch (err) {
+    return NextResponse.json({
+      success: false,
+      message: (err as Error).message,
+      data: {},
+    });
+  }
+}

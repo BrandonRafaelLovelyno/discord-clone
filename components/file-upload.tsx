@@ -12,12 +12,14 @@ interface FileUploadProps {
   endpoint: "messageFile" | "serverImage";
   onChange: (url?: string) => void;
   value?: string;
+  isSubmitting: boolean;
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
   value,
   endpoint,
   onChange,
+  isSubmitting,
 }) => {
   const fileType = value?.split(".").pop();
   if (value && fileType != "pdf") {
@@ -26,8 +28,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
         className="relative w-24 h-24 rounded-full"
         initial={{ opacity: 0, y: -20 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.5 }}
         exit={{ opacity: 0, y: -20 }}
+        key="image"
       >
         <Image
           alt="server image"
@@ -39,6 +42,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
         <button
           className="absolute flex items-center justify-center w-3 h-3 bg-red-500 rounded-full -top-2 -right-2"
           onClick={() => onChange("")}
+          disabled={isSubmitting}
         >
           <X />
         </button>
@@ -52,6 +56,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.2 }}
       exit={{ opacity: 0, y: -20 }}
+      key="non-image"
     >
       <UploadDropzone
         endpoint={endpoint}

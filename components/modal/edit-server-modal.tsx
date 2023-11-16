@@ -1,6 +1,6 @@
 "use client";
 
-import { S_ServerResponse } from "@/lib/types/api-response";
+import { APIResponse, S_ServerResponse } from "@/lib/types/api-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
@@ -11,7 +11,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import axios from "axios";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import * as z from "zod";
@@ -29,58 +29,60 @@ import useModal from "@/hooks/useModal";
 import MotionDivUp from "../animation/motion-div-up";
 import { useSWRConfig } from "swr";
 import { useSession } from "next-auth/react";
+import { Server } from "@prisma/client";
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: "Your server needs a name" }),
-  imageUrl: z.string(),
+  name: z.string().min(1, "Your server needs a name"),
+  imageUrl: z.string().min(1, "Your server needs an image"),
 });
 
-const CreateServerModal = () => {
+const EditServerModal = () => {
+  const { mutate } = useSWRConfig();
   const { data: session } = useSession();
   const modal = useModal();
-  const { mutate } = useSWRConfig();
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      imageUrl: "",
+    },
+  });
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => {
       try {
-        const res = await axios.post<S_ServerResponse>("/api/server", values);
+        const res = await axios.patch<S_ServerResponse>(
+          `/api/server/${modal.data.server?.id}`,
+          values
+        );
         if (!res.data.success) {
           throw new Error(res.data.message);
         }
-        toast.success(`You have created the ${res.data.data.name} server`);
-        setTimeout(() => {
-          form.reset();
-          modal.onClose();
-        }, 200);
         mutate(`/api/server?profileId=${session?.user.profileId}`);
         mutate(`/api/server/${modal.data.server?.id}`);
+        modal.onOpen("editServer", { server: res.data.data });
+        toast.success("Server updated");
+        form.reset();
+        modal.onClose();
       } catch (err) {
         toast.error((err as Error).message);
       }
     },
     [session?.user, modal.data.server]
   );
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      imageUrl: "",
-    },
-    resolver: zodResolver(formSchema),
-  });
-
-  const handleClose = () => {
-    form.reset();
-    modal.onClose();
-  };
-
+  useEffect(() => {
+    if (modal.data.server) {
+      form.setValue("name", modal.data.server.name);
+      form.setValue("imageUrl", modal.data.server.imageUrl);
+    }
+  }, [modal.data.server]);
   return (
     <Dialog
-      open={modal.isOpen && modal.type == "createServer"}
-      onOpenChange={handleClose}
+      open={modal.isOpen && modal.type == "editServer"}
+      onOpenChange={modal.onClose}
     >
       <MotionDivUp>
         <DialogContent className="p-0 offset-0">
           <DialogHeader className="pt-5">
-            <DialogTitle className="text-center">Create server</DialogTitle>
+            <DialogTitle className="text-center">Edit server</DialogTitle>
             <DialogDescription className="text-center">
               Give your server personality with an image and a title
             </DialogDescription>
@@ -99,10 +101,10 @@ const CreateServerModal = () => {
                       <div className="flex justify-center w-full rounded-md cursor-pointer mt-7">
                         <FormControl>
                           <FileUpload
-                            isSubmitting={form.formState.isSubmitting}
                             endpoint="serverImage"
                             onChange={field.onChange}
                             value={field.value}
+                            isSubmitting={form.formState.isSubmitting}
                           />
                         </FormControl>
                       </div>
@@ -120,7 +122,7 @@ const CreateServerModal = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Localhost"
+                          placeholder={modal.data.server?.name}
                           className=""
                           disabled={form.formState.isSubmitting}
                           {...field}
@@ -136,7 +138,7 @@ const CreateServerModal = () => {
                   variant="primary"
                   disabled={form.formState.isSubmitting}
                 >
-                  Create
+                  Edit
                 </Button>
               </DialogFooter>
             </form>
@@ -147,4 +149,4 @@ const CreateServerModal = () => {
   );
 };
 
-export default CreateServerModal;
+export default EditServerModal;
