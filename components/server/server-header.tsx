@@ -2,7 +2,7 @@
 
 import { ServerWithChannelWithMemberWithProfile } from "@/lib/types/collection";
 import { MemberRole } from "@prisma/client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,12 +29,25 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
   const isModerator = role == "MODERATOR";
   const isAdmin = role == "ADMIN";
   const modal = useModal();
-  const usedServer = modal.data?.server || server;
+  useEffect(() => {
+    if (modal.isOpen) {
+      modal.onOpen(modal.type, { server });
+    } else {
+      modal.onOpen(undefined, { server });
+    }
+  }, [server]);
+  const title = useMemo(() => {
+    if (!modal.data.server?.name) {
+      return "...";
+    } else {
+      return modal.data.server.name;
+    }
+  }, [modal.data]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center w-full h-12 px-3 font-semibold transition border-b-2 text-md border-neutral-200 dark:border-neutral-800 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50">
-          {usedServer.name}
+          {title}
           <ChevronDown className="w-5 h-5 ml-auto" />
         </button>
       </DropdownMenuTrigger>
@@ -42,7 +55,9 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         {!isModerator && (
           <DropdownMenuItem
             className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3"
-            onClick={() => modal.onOpen("invite", { server: usedServer })}
+            onClick={() =>
+              modal.onOpen("invite", { server: modal.data.server })
+            }
           >
             Invite people <UserPlus className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>
@@ -51,7 +66,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
           <DropdownMenuItem
             className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3"
             onClick={() => {
-              modal.onOpen("editServer", { server: usedServer });
+              modal.onOpen("editServer", { server: modal.data.server });
             }}
           >
             Server Settings
@@ -61,7 +76,9 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         {isAdmin && (
           <DropdownMenuItem
             className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3"
-            onClick={() => modal.onOpen("members", { server: usedServer })}
+            onClick={() =>
+              modal.onOpen("members", { server: modal.data.server })
+            }
           >
             Manage Members
             <Users className="w-4 h-4 ml-4" />
@@ -71,7 +88,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
           <DropdownMenuItem
             className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3"
             onClick={() =>
-              modal.onOpen("createChannel", { server: usedServer })
+              modal.onOpen("createChannel", { server: modal.data.server })
             }
           >
             Create Channel

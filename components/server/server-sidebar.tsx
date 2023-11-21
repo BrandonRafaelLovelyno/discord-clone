@@ -13,7 +13,11 @@ interface ServerSideBarProps {
 }
 
 const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
-  const { data: serverData, isLoading: serverLoading } = useServer({
+  const {
+    data: serverData,
+    isLoading: serverLoading,
+    isValidating,
+  } = useServer({
     serverId: serverId,
   });
   const role = useMemo(() => {
@@ -40,7 +44,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
         </MotionDivUp>
       );
     }
-  }, [serverLoading, serverData]);
+  }, [serverLoading, serverData, isValidating]);
   const [textChannel, audioChannel, videoChannel] = useMemo(() => {
     if (serverLoading || !serverData?.data) {
       return [];

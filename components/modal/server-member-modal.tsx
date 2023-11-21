@@ -113,7 +113,7 @@ const ServerMemberModal = () => {
               <div className="flex flex-col text-sm gap-y-1">
                 <div className="flex items-center gap-x-1">
                   <p>{m.profile.name}</p>
-                  {roleIconMap[m.role]}
+                  <MotionDivUp key={m.role}>{roleIconMap[m.role]}</MotionDivUp>
                 </div>
                 <p className="text-gray-400">{m.profile.email}</p>
               </div>
@@ -182,7 +182,7 @@ const ServerMemberModal = () => {
     );
     const desc = <p>{modal.data.server.members.length} members</p>;
     return [desc, bod];
-  }, [modal.data.server]);
+  }, [modal.data.server, loadingId]);
   return (
     <Dialog
       open={modal.isOpen && modal.type == "members"}

@@ -16,7 +16,8 @@ const useServer = ({
   if (serverId) {
     return useSWR<S_ServerWithRoleResponse>(
       `/api/server/${serverId!}`,
-      fetcher
+      fetcher,
+      { refreshInterval: 2000 }
     );
   } else {
     return useSWR<M_ServerResponse>(

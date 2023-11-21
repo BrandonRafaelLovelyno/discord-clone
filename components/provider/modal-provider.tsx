@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import InviteModal from "../modal/invite-modal";
 import EditServerModal from "../modal/edit-server-modal";
 import ServerMemberModal from "../modal/server-member-modal";
+import CreateChannelModal from "../modal/create-channel-modal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -17,6 +18,7 @@ const ModalProvider = () => {
   }
   return (
     <>
+      <CreateChannelModal />
       <ServerMemberModal />
       <EditServerModal />
       <CreateServerModal />
