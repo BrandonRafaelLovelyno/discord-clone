@@ -108,6 +108,14 @@ export async function PATCH(
           name,
           imageUrl,
         },
+        include: {
+          channels: {
+            include: {
+              profile: true,
+            },
+          },
+          members: true,
+        },
       });
     }
     if (!updatedServer) {

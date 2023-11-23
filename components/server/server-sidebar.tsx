@@ -26,7 +26,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
     } else {
       return (serverData as S_ServerWithRoleResponse).data.role;
     }
-  }, [serverLoading]);
+  }, [serverLoading, isValidating, serverData]);
   const body: React.ReactElement = useMemo(() => {
     if (serverLoading || !serverData?.data) {
       return (

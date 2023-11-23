@@ -17,6 +17,7 @@ const options: NextAuthOptions = {
       return true;
     },
     async jwt({ token, user }) {
+      console.log("jwt callback", token, user);
       const userDoc = await prismadb.user.findUnique({
         where: {
           email: token.email!,

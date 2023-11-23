@@ -1,6 +1,10 @@
 "use client";
 
-import { APIResponse, S_ServerResponse } from "@/lib/types/api-response";
+import {
+  APIResponse,
+  S_ServerResponse,
+  S_ServerWithChannelWithProfileResponse,
+} from "@/lib/types/api-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
@@ -29,7 +33,6 @@ import useModal from "@/hooks/useModal";
 import MotionDivUp from "../animation/motion-div-up";
 import { useSWRConfig } from "swr";
 import { useSession } from "next-auth/react";
-import { Server } from "@prisma/client";
 
 const formSchema = z.object({
   name: z.string().min(1, "Your server needs a name"),
@@ -49,7 +52,7 @@ const EditServerModal = () => {
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => {
       try {
-        const res = await axios.patch<S_ServerResponse>(
+        const res = await axios.patch<S_ServerWithChannelWithProfileResponse>(
           `/api/server/${modal.data.server?.id}`,
           values
         );
