@@ -66,7 +66,12 @@ const CreateChannelModal = () => {
     }
   };
   return (
-    <Dialog open={modal.type == "createChannel" && modal.isOpen}>
+    <Dialog
+      open={modal.type == "createChannel" && modal.isOpen}
+      onOpenChange={() => {
+        modal.onClose();
+      }}
+    >
       <DialogContent className="p-0 offset-0">
         <MotionDivUp>
           <DialogHeader className="pt-5 mb-5">

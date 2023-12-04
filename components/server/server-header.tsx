@@ -102,7 +102,12 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
           </DropdownMenuItem>
         )}
         {!isAdmin && (
-          <DropdownMenuItem className="flex px-3 py-2 text-sm cursor-pointer text-rose-400 dark:text-rose-600 gap-x-3">
+          <DropdownMenuItem
+            className="flex px-3 py-2 text-sm cursor-pointer text-rose-400 dark:text-rose-600 gap-x-3"
+            onClick={() => {
+              modal.onOpen("leaveServer", { server: modal.data.server });
+            }}
+          >
             Leave Server
             <LogOut className="w-4 h-4 ml-auto" />
           </DropdownMenuItem>

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogContent,
@@ -41,7 +43,7 @@ const InviteModal = () => {
       const res = await axios.patch<S_ServerResponse>(
         `/api/server/${modal.data.server?.id}/invite-code`
       );
-      modal.onOpen("invite", { server: res.data.data });
+      //MODAL DATA NOT UPDATED
       toast.success("Invite code renewed");
     } catch (err) {
       toast.error((err as Error).message);
