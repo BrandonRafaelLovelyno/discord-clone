@@ -51,7 +51,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
           <ChevronDown className="w-5 h-5 ml-auto" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="px-5">
+      <DropdownMenuContent className="px-5 py-3">
         {!isModerator && (
           <DropdownMenuItem
             className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3"

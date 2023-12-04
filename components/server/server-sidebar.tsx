@@ -36,7 +36,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
       );
     } else {
       return (
-        <MotionDivUp className="w-full h-full" key="server header">
+        <MotionDivUp className="w-full h-full" key="server-header">
           <ServerHeader
             role={role!}
             server={(serverData as S_ServerWithRoleResponse).data.server}

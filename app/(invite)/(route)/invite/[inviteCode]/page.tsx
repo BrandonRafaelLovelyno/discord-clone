@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 const InvitePage = async ({ params }: { params: { inviteCode: string } }) => {
-  console.log("on server sir");
   const session = await getServerSession(options);
   if (!session) {
     return redirect("/");
@@ -20,9 +19,7 @@ const InvitePage = async ({ params }: { params: { inviteCode: string } }) => {
     },
   });
   if (joinedServer) {
-    return redirect(
-      `/server/${joinedServer.id}?profileId=${session.user.profileId}`
-    );
+    return redirect(`/server/${joinedServer.id}`);
   }
   const updatedServer = await prismadb.server.update({
     where: {
@@ -37,9 +34,7 @@ const InvitePage = async ({ params }: { params: { inviteCode: string } }) => {
     },
   });
   if (updatedServer) {
-    return redirect(
-      `/server/${updatedServer.id}?profileId=${session.user.profileId}`
-    );
+    return redirect(`/server/${updatedServer.id}`);
   }
   return redirect("/");
 };
