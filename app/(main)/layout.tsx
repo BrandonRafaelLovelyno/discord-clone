@@ -24,7 +24,7 @@ export default function MainLayout({
   }
 
   return (
-    <MotionDivPage className="flex flex-row w-full h-full">
+    <MotionDivPage className="flex flex-row w-full h-full" key={"main-page"}>
       <div className="max-md:hidden h-full w-[75px] dark:bg-[#1E1F22] bg-[#E3E5E8]">
         {navbar}
       </div>

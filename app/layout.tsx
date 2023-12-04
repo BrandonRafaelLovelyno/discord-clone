@@ -57,10 +57,8 @@ export default async function RootLayout({
                 }}
               />
               <main className="relative w-full h-full overflow-hidden">
-                <MotionDivPage className="w-full h-full">
-                  <ModalProvider />
-                  {children}
-                </MotionDivPage>
+                <ModalProvider />
+                {children}
               </main>
             </AnimatePresence>
           </ThemeProvider>

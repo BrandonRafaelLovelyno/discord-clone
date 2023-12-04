@@ -2,7 +2,6 @@ import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prismadb from "@/lib/orm/prismadb";
-import { use } from "react";
 
 const options: NextAuthOptions = {
   adapter: PrismaAdapter(prismadb),

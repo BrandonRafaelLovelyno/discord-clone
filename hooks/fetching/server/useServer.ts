@@ -20,10 +20,7 @@ const useServer = ({
       { refreshInterval: 2000 }
     );
   } else {
-    return useSWR<M_ServerResponse>(
-      `/api/server?profileId=${profileId!}`,
-      fetcher
-    );
+    return useSWR<M_ServerResponse>(`/api/server`, fetcher);
   }
 };
 

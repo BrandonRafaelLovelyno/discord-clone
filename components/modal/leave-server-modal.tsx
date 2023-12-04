@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogFooter,
 } from "@/components/ui/dialog";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Input } from "../ui/input";
 import useModal from "@/hooks/useModal";
 import MotionDivUp from "../animation/motion-div-up";
@@ -16,7 +16,10 @@ import { Check, Copy, RefreshCcw } from "lucide-react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import useOrigin from "@/hooks/useOrigin";
-import { S_ServerResponse } from "@/lib/types/api-response";
+import {
+  S_ServerResponse,
+  S_ServerWithChannelWithProfileResponse,
+} from "@/lib/types/api-response";
 import { Button } from "../ui/button";
 import { FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
@@ -28,6 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { useSWRConfig } from "swr";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Type the server name" }),
@@ -41,21 +45,31 @@ const LeaveServerModal = () => {
     resolver: zodResolver(formSchema),
   });
   const modal = useModal();
+  const { mutate } = useSWRConfig();
   const handleClose = () => {
     modal.onClose();
   };
-  const onClick = async () => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await axios.patch<S_ServerResponse>(
-        `/api/server/${modal.data.server?.id}/invite-code`
+      if (values.name !== modal.data.server?.name) {
+        throw new Error("Invalid server name");
+      }
+      const res = await axios.patch<S_ServerWithChannelWithProfileResponse>(
+        `/api/server/${modal.data.server?.id}/leave`
       );
-      //MODAL DATA NOT UPDATED
-      toast.success("Invite code renewed");
+      if (!res.data.success) {
+        throw new Error(res.data.message);
+      }
+      modal.onOpen("leaveServer", { server: res.data.data });
+      toast.success("You have left the server");
+      form.reset();
+      modal.onClose();
+      mutate("/api/server");
     } catch (err) {
       toast.error((err as Error).message);
-    } finally {
     }
   };
+  useEffect(() => {}, []);
   return (
     <Dialog
       open={modal.isOpen && modal.type == "leaveServer"}
@@ -75,7 +89,7 @@ const LeaveServerModal = () => {
           </DialogHeader>
           <div className="flex flex-col gap-x-3">
             <FormProvider {...form}>
-              <form>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                   name="name"
                   control={form.control}

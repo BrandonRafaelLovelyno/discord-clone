@@ -21,6 +21,7 @@ const ColorRingLoader: React.FC<ColorRingLoaderProps> = ({ height, width }) => {
           damping: 20,
           duration: 0.4,
         }}
+        key={"color-ring-loader"}
         exit={{ scale: 0, rotate: 180 }}
         className="flex items-center justify-center w-full"
       >

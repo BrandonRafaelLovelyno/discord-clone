@@ -49,29 +49,16 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const url = new URL(req.url);
-    const profileId = url.searchParams.get("profileId");
-
-    if (!profileId) {
-      throw new Error("Missing field");
-    }
-
     const session = await getServerSession(options);
     if (!session) {
       throw new Error("Unauthorized");
     }
 
-    if (session.user.profileId !== profileId) {
-      throw new Error("Unauthorized");
-    }
-
-    console.log(profileId);
-
     const server = await prismadb.server.findMany({
       where: {
         members: {
           some: {
-            profileId,
+            profileId: session.user.profileId,
           },
         },
       },

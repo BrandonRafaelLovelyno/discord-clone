@@ -51,7 +51,7 @@ const CreateServerModal = () => {
           form.reset();
           modal.onClose();
         }, 200);
-        mutate(`/api/server?profileId=${session?.user.profileId}`);
+        mutate(`/api/server`);
         mutate(`/api/server/${modal.data.server?.id}`);
       } catch (err) {
         toast.error((err as Error).message);

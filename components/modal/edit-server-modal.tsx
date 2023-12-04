@@ -59,7 +59,7 @@ const EditServerModal = () => {
         if (!res.data.success) {
           throw new Error(res.data.message);
         }
-        mutate(`/api/server?profileId=${session?.user.profileId}`);
+        mutate(`/api/server`);
         mutate(`/api/server/${modal.data.server?.id}`);
         modal.onOpen("editServer", { server: res.data.data });
         toast.success("Server updated");

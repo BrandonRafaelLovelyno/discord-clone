@@ -5,7 +5,8 @@ import ColorRingLoader from "@/components/loader/color-ring";
 import { useMemo } from "react";
 import useSetUp from "@/hooks/fetching/setup/useSetUp";
 import InitialModal from "@/components/modal/initial-modal";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import MotionDivPage from "@/components/animation/motion-div-page";
 
 export default function Home() {
   const { data: setUpData, isLoading: setUpLoading, mutate } = useSetUp();
@@ -26,8 +27,11 @@ export default function Home() {
   }, [setUpLoading]);
 
   return (
-    <main className="flex flex-col items-center justify-center h-full">
+    <MotionDivPage
+      key={"set-up-screen"}
+      className="flex flex-col items-center justify-center h-full"
+    >
       {body}
-    </main>
+    </MotionDivPage>
   );
 }
