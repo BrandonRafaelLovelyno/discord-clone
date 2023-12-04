@@ -18,13 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ProfileAvatar from "../profile-avatar";
-import useServer from "@/hooks/fetching/server/useServer";
-import {
-  APIResponse,
-  S_ServerResponse,
-  S_ServerWithChannelWithProfileResponse,
-  S_ServerWithRoleResponse,
-} from "@/lib/types/api-response";
+import { S_ServerWithChannelWithProfileResponse } from "@/lib/types/api-response";
 import { ScrollArea } from "../ui/scroll-area";
 import LineWaveLoader from "../loader/line-wave";
 import {

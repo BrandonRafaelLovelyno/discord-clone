@@ -79,7 +79,7 @@ const CreateChannelModal = () => {
             <DialogDescription>Cooking new channel</DialogDescription>
           </DialogHeader>
           <FormProvider {...form}>
-            <form>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col items-center justify-center px-5 gap-y-8">
                 <FormField
                   name="name"

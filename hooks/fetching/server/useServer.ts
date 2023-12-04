@@ -6,13 +6,7 @@ import {
 } from "@/lib/types/api-response";
 import useSWR from "swr";
 
-const useServer = ({
-  serverId,
-  profileId,
-}: {
-  serverId?: string;
-  profileId?: string;
-}) => {
+const useServer = ({ serverId }: { serverId?: string }) => {
   if (serverId) {
     return useSWR<S_ServerWithRoleResponse>(
       `/api/server/${serverId!}`,

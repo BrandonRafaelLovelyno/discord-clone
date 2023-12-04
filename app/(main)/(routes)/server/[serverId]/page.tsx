@@ -8,7 +8,6 @@ const ServerPage = async ({ params }: { params: { serverId: string } }) => {
       id: params.serverId,
     },
   });
-  console.log(server);
   return (
     <MotionDivUp key={"main-server"} delay={0.5}>
       {server?.name}

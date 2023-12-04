@@ -66,6 +66,40 @@ export async function GET(
   }
 }
 
+export async function DELETE(
+  req: Request,
+  { params }: { params: { serverId: string } }
+) {
+  try {
+    if (!params.serverId) {
+      throw new Error("Missing fields");
+    }
+    const session = await getServerSession(options);
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+    const deletedServer = await prismadb.server.delete({
+      where: {
+        id: params.serverId,
+      },
+    });
+    if (!deletedServer) {
+      throw new Error("Invalid serverId");
+    }
+    return NextResponse.json({
+      success: true,
+      message: "",
+      data: {},
+    });
+  } catch (err) {
+    return NextResponse.json({
+      success: false,
+      data: {},
+      message: (err as Error).message,
+    });
+  }
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: { serverId: string } }

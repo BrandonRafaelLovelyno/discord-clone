@@ -64,8 +64,6 @@ export async function GET(req: Request) {
       },
     });
 
-    console.log("server :", server);
-
     return NextResponse.json({
       message: "",
       success: true,

@@ -15,12 +15,8 @@ interface NavigationBarProps {
   profileId: string;
 }
 
-const NavigationBar: React.FC<NavigationBarProps> = ({ profileId }) => {
-  const {
-    data: serverData,
-    isLoading: serverLoading,
-    mutate,
-  } = useServer({ profileId });
+const NavigationBar: React.FC<NavigationBarProps> = () => {
+  const { data: serverData, isLoading: serverLoading } = useServer({});
   if (serverLoading || !serverData?.data) {
     return <></>;
   }

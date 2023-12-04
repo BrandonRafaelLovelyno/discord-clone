@@ -1,29 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogDescription,
   DialogTitle,
   DialogHeader,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import React, { useEffect, useMemo, useState } from "react";
-import { Input } from "../ui/input";
-import useModal from "@/hooks/useModal";
-import MotionDivUp from "../animation/motion-div-up";
-import { Check, Copy, RefreshCcw } from "lucide-react";
-import { toast } from "react-hot-toast";
 import axios from "axios";
-import useOrigin from "@/hooks/useOrigin";
-import {
-  S_ServerResponse,
-  S_ServerWithChannelWithProfileResponse,
-} from "@/lib/types/api-response";
-import { Button } from "../ui/button";
+import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   FormControl,
   FormField,
@@ -31,13 +21,19 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import useModal from "@/hooks/useModal";
+import MotionDivUp from "../animation/motion-div-up";
 import { useSWRConfig } from "swr";
+import { S_ServerResponse } from "@/lib/types/api-response";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Type the server name" }),
 });
 
-const LeaveServerModal = () => {
+const DeleteServerModal = () => {
+  const { mutate } = useSWRConfig();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -45,7 +41,6 @@ const LeaveServerModal = () => {
     resolver: zodResolver(formSchema),
   });
   const modal = useModal();
-  const { mutate } = useSWRConfig();
   const handleClose = () => {
     modal.onClose();
   };
@@ -54,25 +49,23 @@ const LeaveServerModal = () => {
       if (values.name !== modal.data.server?.name) {
         throw new Error("Invalid server name");
       }
-      const res = await axios.patch<S_ServerWithChannelWithProfileResponse>(
-        `/api/server/${modal.data.server?.id}/leave`
+      const res = await axios.delete<S_ServerResponse>(
+        `/api/server/${modal.data.server?.id}`
       );
       if (!res.data.success) {
         throw new Error(res.data.message);
       }
-      modal.onOpen("leaveServer", { server: res.data.data });
-      toast.success("You have left the server");
+      toast.success(`You have deleted the ${modal.data.server?.name} server`);
+      await mutate("/api/server");
       form.reset();
       modal.onClose();
-      mutate("/api/server");
     } catch (err) {
       toast.error((err as Error).message);
     }
   };
-  useEffect(() => {}, []);
   return (
     <Dialog
-      open={modal.isOpen && modal.type == "leaveServer"}
+      open={modal.isOpen && modal.type == "deleteServer"}
       onOpenChange={handleClose}
     >
       <MotionDivUp>
@@ -80,7 +73,7 @@ const LeaveServerModal = () => {
           <DialogHeader className="pt-5">
             <DialogTitle className="text-center">Leave Server</DialogTitle>
             <DialogDescription className="text-center">
-              You are leaving the
+              You are deleting the
               <span className="mx-2 font-bold text-purple-600">
                 {modal.data.server?.name}
               </span>
@@ -110,10 +103,10 @@ const LeaveServerModal = () => {
                 />
                 <DialogFooter className="px-3 py-5 mt-10 bg-stone-900">
                   <Button
-                    disabled={form.formState.isSubmitting}
                     variant="destructive"
+                    disabled={form.formState.isSubmitting}
                   >
-                    Leave server
+                    Delete server
                   </Button>
                 </DialogFooter>
               </form>
@@ -125,4 +118,4 @@ const LeaveServerModal = () => {
   );
 };
 
-export default LeaveServerModal;
+export default DeleteServerModal;
