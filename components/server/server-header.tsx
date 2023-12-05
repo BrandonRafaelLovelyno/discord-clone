@@ -97,7 +97,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
         )}
         {isAdmin && (
           <DropdownMenuItem
-            className="flex px-3 py-2 text-sm text-indigo-600 cursor-pointer dark:text-indigo-400 gap-x-3"
+            className="flex px-3 py-2 text-sm cursor-pointer text-rose-400 dark:text-rose-600 gap-x-3"
             onClick={() => modal.onOpen("deleteServer", { server })}
           >
             Delete Server

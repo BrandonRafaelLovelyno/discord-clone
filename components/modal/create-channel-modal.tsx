@@ -34,6 +34,7 @@ import { Button } from "../ui/button";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { S_ServerWithChannelWithProfileResponse } from "@/lib/types/api-response";
+import { useSWRConfig } from "swr";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Your channel needs a name" }),
@@ -41,6 +42,7 @@ const formSchema = z.object({
 });
 
 const CreateChannelModal = () => {
+  const { mutate } = useSWRConfig();
   const modal = useModal();
   const form = useForm({
     defaultValues: {
@@ -52,12 +54,14 @@ const CreateChannelModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const res = await axios.post<S_ServerWithChannelWithProfileResponse>(
-        "/api/channel",
+        `/api/channel?serverId=${modal.data.server?.id}`,
         values
       );
       if (!res.data.success) {
         throw new Error(res.data.message);
       }
+      await mutate("/api/server");
+      modal.onOpen("createChannel", { server: res.data.data });
       toast.success("Channel created");
       form.reset();
       modal.onClose();
@@ -131,14 +135,17 @@ const CreateChannelModal = () => {
                   )}
                 />
               </div>
+              <DialogFooter className="px-3 py-5 mt-10 bg-stone-900">
+                <Button
+                  variant="primary"
+                  disabled={form.formState.isSubmitting}
+                >
+                  Create
+                </Button>
+              </DialogFooter>
             </form>
           </FormProvider>
         </MotionDivUp>
-        <DialogFooter className="px-3 py-5 mt-10 bg-stone-900">
-          <Button variant="primary" disabled={form.formState.isSubmitting}>
-            Create
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

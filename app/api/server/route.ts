@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/orm/prismadb";
 import { v4 as uuidv4 } from "uuid";
-import { MemberRole } from "@prisma/client";
+import { ChannelType, MemberRole } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import options from "@/lib/auth/option";
 
@@ -33,7 +33,9 @@ export async function POST(req: Request) {
           create: [{ profileId: profile.id, role: MemberRole.ADMIN }],
         },
         channels: {
-          create: [{ name: "General", profileId: profile.id }],
+          create: [
+            { name: "General", profileId: profile.id, type: ChannelType.TEXT },
+          ],
         },
       },
     });
