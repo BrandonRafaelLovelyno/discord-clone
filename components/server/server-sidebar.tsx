@@ -96,6 +96,17 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
               })),
         };
       });
+      const memberData = {
+        label: "Member",
+        type: "member" as objType,
+        data: (serverData as S_ServerWithRoleResponse).data.server.members.map(
+          (m) => ({
+            icon: roleIconMap[m.role],
+            name: m.profile.name,
+            id: m.id,
+          })
+        ),
+      };
       return (
         <MotionDivUp
           className="flex flex-col w-full h-full"
@@ -106,7 +117,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
             server={(serverData as S_ServerWithRoleResponse).data.server}
           />
           <ScrollArea className="flex-1">
-            <ServerSearch data={channelData} />
+            <ServerSearch data={[...channelData, memberData]} />
           </ScrollArea>
         </MotionDivUp>
       );

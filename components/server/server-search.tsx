@@ -44,7 +44,7 @@ const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
         </div>
       </button>
       <CommandDialog open={isOpen} onOpenChange={() => setIsOpen(false)}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput placeholder="Search channel or member..." />
         <CommandList>
           <CommandEmpty>No result found</CommandEmpty>
           {data.map((dat) => (
