@@ -85,7 +85,8 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
           (c) => c.length > 0 && c[0].type == cT
         );
         return {
-          label: cT.charAt(0).toUpperCase() + cT.slice(1).toLowerCase(),
+          label:
+            cT.charAt(0).toUpperCase() + cT.slice(1).toLowerCase() + " channel",
           type: "channel" as objType,
           data: !cPerType
             ? undefined
@@ -97,7 +98,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
         };
       });
       const memberData = {
-        label: "Member",
+        label: "Channel members",
         type: "member" as objType,
         data: (serverData as S_ServerWithRoleResponse).data.server.members.map(
           (m) => ({

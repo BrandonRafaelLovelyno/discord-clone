@@ -1,19 +1,17 @@
 "use client";
 
 import { objType } from "./server-sidebar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import { Search } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 
 interface ServerSearchProps {
   data: {
@@ -29,9 +27,35 @@ interface ServerSearchProps {
   }[];
 }
 
+interface KeyboardEvent {
+  key: string;
+  metaKey: boolean;
+  ctrlKey: boolean;
+  preventDefault: () => void;
+}
+
 const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const params = useParams();
+  const router = useRouter();
+  useEffect(() => {
+    const keyDown = (ev: KeyboardEvent): void => {
+      if (ev.key === "k" && (ev.metaKey || ev.ctrlKey)) {
+        ev.preventDefault();
+        setIsOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", keyDown);
+    return () => document.removeEventListener("keydown", keyDown);
+  }, [setIsOpen]);
+  const onClick = ({ id, type }: { id: string; type: objType }) => {
+    setIsOpen(false);
+    if (type == "channel") {
+      router.push(`/server/${params.serverId}/channel/${id}`);
+    } else {
+      router.push(`/server/${params.serverId}/conversation/${id}`);
+    }
+  };
   return (
     <>
       <button onClick={() => setIsOpen(true)} className="w-full mt-4">
@@ -48,11 +72,14 @@ const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
         <CommandList>
           <CommandEmpty>No result found</CommandEmpty>
           {data.map((dat) => (
-            <CommandGroup key={dat.label} heading={`${dat.label} Channel`}>
+            <CommandGroup key={dat.label} heading={`${dat.label}`}>
               {dat.data?.map((d) => (
                 <CommandItem
                   key={d.id}
-                  className="flex flex-row w-full gap-x-5"
+                  className="flex flex-row w-full cursor-pointer gap-x-5"
+                  onSelect={() => {
+                    onClick({ id: d.id, type: dat.type });
+                  }}
                 >
                   {d.icon}
                   {d.name}
