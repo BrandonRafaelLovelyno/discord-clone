@@ -14,6 +14,8 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import ServerSection from "./server-section";
 import ServerChannel from "./server-channel";
+import { ServerWithChannelWithMemberWithProfile } from "@/lib/types/collection";
+import ServerMember from "./server-member";
 
 interface ServerSideBarProps {
   serverId: string;
@@ -25,7 +27,7 @@ const iconMap: Record<ChannelType, React.ReactNode> = {
   [ChannelType.VIDEO]: <Video className="w-4 h-4 mr-2" />,
 };
 
-const roleIconMap: Record<MemberRole, React.ReactNode> = {
+export const roleIconMap: Record<MemberRole, React.ReactNode> = {
   [MemberRole.GUEST]: null,
   [MemberRole.MODERATOR]: (
     <ShieldCheck className="w-4 h-4 mr-2 text-indigo-500" />
@@ -45,6 +47,13 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
   } = useServer({
     serverId: serverId,
   });
+  const usedServer: ServerWithChannelWithMemberWithProfile | undefined =
+    useMemo(() => {
+      if (serverLoading || !serverData) {
+        return undefined;
+      }
+      return (serverData as S_ServerWithRoleResponse).data.server;
+    }, [serverData, serverLoading, isValidating]);
   const role = useMemo(() => {
     if (serverLoading || !serverData?.data) {
       return null;
@@ -53,10 +62,10 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
     }
   }, [serverLoading, isValidating, serverData]);
   const channelPerType = useMemo(() => {
-    if (serverLoading || !serverData?.data) {
+    if (serverLoading || !usedServer) {
       return [];
     } else {
-      const server = (serverData as S_ServerWithRoleResponse).data.server;
+      const server = usedServer;
       const text: Channel[] = [];
       const audio: Channel[] = [];
       const video: Channel[] = [];
@@ -76,7 +85,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
     }
   }, [serverLoading, serverData, isValidating]);
   const body: React.ReactElement = useMemo(() => {
-    if (serverLoading || !serverData?.data) {
+    if (serverLoading || !usedServer) {
       return (
         <MotionDivUp key="loader">
           <PuffLoader height={60} width={60} />
@@ -103,30 +112,24 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
       const memberData = {
         label: "Channel members",
         type: "member" as objType,
-        data: (serverData as S_ServerWithRoleResponse).data.server.members.map(
-          (m) => ({
-            icon: roleIconMap[m.role],
-            name: m.profile.name,
-            id: m.id,
-          })
-        ),
+        data: usedServer.members.map((m) => ({
+          icon: roleIconMap[m.role],
+          name: m.profile.name,
+          id: m.id,
+        })),
       };
       return (
         <MotionDivUp
           className="flex flex-col w-full h-full"
           key="server-header"
         >
-          <ServerHeader
-            role={role!}
-            server={(serverData as S_ServerWithRoleResponse).data.server}
-          />
+          <ServerHeader role={role!} server={usedServer} />
           <ScrollArea className="flex-1">
             <ServerSearch data={[...channelData, memberData]} />
             <Separator className="my-4 rounded-md bg-zinc-200 dark:bg-zinc-700" />
             {channelPerType.map((cT, index) => (
               <>
                 <ServerSection
-                  channelType={ChannelType.TEXT}
                   label={
                     index == 0
                       ? "text channel"
@@ -136,27 +139,36 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
                   }
                   role={role!}
                   sectionType="channel"
-                  server={(serverData as S_ServerWithRoleResponse).data.server}
+                  server={usedServer}
                   key={"text-ch"}
                 />
                 {cT.map((ch) => (
                   <MotionDivUp
                     key={ch.id}
-                    delay={Math.random() * 1.5}
+                    delay={Math.random()}
                     className="mb-1"
                   >
                     <ServerChannel
                       channel={ch}
                       id={ch.id}
                       role={role!}
-                      server={
-                        (serverData as S_ServerWithRoleResponse).data.server
-                      }
+                      server={usedServer}
                       icon={iconMap[ch.type]}
                     />
                   </MotionDivUp>
                 ))}
               </>
+            ))}
+            <ServerSection
+              label="Server Members"
+              role={role!}
+              sectionType="member"
+              server={usedServer}
+            />
+            {usedServer.members.map((m) => (
+              <MotionDivUp delay={Math.random() + 1} className="mb-2">
+                <ServerMember member={m} server={usedServer} key={m.id} />
+              </MotionDivUp>
             ))}
           </ScrollArea>
         </MotionDivUp>

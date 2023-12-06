@@ -4,7 +4,7 @@ import { ServerWithChannelWithMemberWithProfile } from "@/lib/types/collection";
 import { ChannelType, MemberRole } from "@prisma/client";
 import React from "react";
 import { objType } from "./server-sidebar";
-import { Plus } from "lucide-react";
+import { Plus, Settings } from "lucide-react";
 import useModal from "@/hooks/useModal";
 import ActionTooltip from "../action-tooltip";
 
@@ -12,7 +12,6 @@ interface ServerSectionProps {
   role: MemberRole;
   server: ServerWithChannelWithMemberWithProfile;
   sectionType: objType;
-  channelType: ChannelType;
   label: string;
 }
 
@@ -21,7 +20,6 @@ const ServerSection: React.FC<ServerSectionProps> = ({
   role,
   server,
   sectionType,
-  channelType,
 }) => {
   const modal = useModal();
   return (
@@ -35,6 +33,16 @@ const ServerSection: React.FC<ServerSectionProps> = ({
               onClick={() => modal.onOpen("createChannel", { server })}
             >
               <Plus className="w-4 h-4" />
+            </button>
+          </ActionTooltip>
+        )}
+        {role !== MemberRole.GUEST && sectionType == "member" && (
+          <ActionTooltip label="Manage member" align="center" side="right">
+            <button
+              className="text-gray-500 duration-200 hover:text-gray-300"
+              onClick={() => modal.onOpen("members", { server })}
+            >
+              <Settings className="w-4 h-4" />
             </button>
           </ActionTooltip>
         )}

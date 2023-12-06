@@ -13,7 +13,7 @@ const ProfileAvatar: React.FC<ProfileAvatarProps> = ({
   className,
 }) => {
   return (
-    <Avatar className={cn(className, "w-7 h-7 md:h-10 md:w-10")}>
+    <Avatar className={cn(className ? className : "w-7 h-7 md:h-10 md:w-10")}>
       <AvatarImage src={imageUrl} />
     </Avatar>
   );
