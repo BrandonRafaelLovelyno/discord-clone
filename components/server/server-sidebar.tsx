@@ -11,6 +11,9 @@ import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
 import ServerSearch from "./server-search";
 import { Channel, Member } from "@prisma/client";
 import { ScrollArea } from "../ui/scroll-area";
+import { Separator } from "../ui/separator";
+import ServerSection from "./server-section";
+import ServerChannel from "./server-channel";
 
 interface ServerSideBarProps {
   serverId: string;
@@ -119,11 +122,47 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
           />
           <ScrollArea className="flex-1">
             <ServerSearch data={[...channelData, memberData]} />
+            <Separator className="my-4 rounded-md bg-zinc-200 dark:bg-zinc-700" />
+            {channelPerType.map((cT, index) => (
+              <>
+                <ServerSection
+                  channelType={ChannelType.TEXT}
+                  label={
+                    index == 0
+                      ? "text channel"
+                      : index == 1
+                      ? "audio channel"
+                      : "video channel"
+                  }
+                  role={role!}
+                  sectionType="channel"
+                  server={(serverData as S_ServerWithRoleResponse).data.server}
+                  key={"text-ch"}
+                />
+                {cT.map((ch) => (
+                  <MotionDivUp
+                    key={ch.id}
+                    delay={Math.random() * 1.5}
+                    className="mb-1"
+                  >
+                    <ServerChannel
+                      channel={ch}
+                      id={ch.id}
+                      role={role!}
+                      server={
+                        (serverData as S_ServerWithRoleResponse).data.server
+                      }
+                      icon={iconMap[ch.type]}
+                    />
+                  </MotionDivUp>
+                ))}
+              </>
+            ))}
           </ScrollArea>
         </MotionDivUp>
       );
     }
-  }, [serverLoading, serverData, isValidating, channelPerType]);
+  }, [serverLoading, serverData, isValidating, channelPerType, role]);
   return (
     <div className="dark:bg-[#2B2D31] bg-[#F2F3F5] h-full w-full flex flex-col justify-center items-center">
       {body}
