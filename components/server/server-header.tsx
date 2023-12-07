@@ -37,12 +37,12 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
     }
   }, [server]);
   const title = useMemo(() => {
-    if (!modal.data.server?.name) {
+    if (!server.name) {
       return "...";
     } else {
-      return modal.data.server.name;
+      return server.name;
     }
-  }, [modal.data]);
+  }, [server]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

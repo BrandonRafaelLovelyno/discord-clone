@@ -151,7 +151,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
                 />
                 {cT.map((ch) => (
                   <MotionDivUp
-                    key={ch.id}
+                    key={`${ch.id}${ch.type}`}
                     delay={Math.random()}
                     className="mb-1"
                   >

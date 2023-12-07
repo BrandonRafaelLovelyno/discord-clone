@@ -41,35 +41,39 @@ const formSchema = z.object({
   type: z.nativeEnum(ChannelType),
 });
 
-const CreateChannelModal = () => {
+const EditChannelModal = () => {
   const { mutate } = useSWRConfig();
   const modal = useModal();
 
   const form = useForm({
     defaultValues: {
       name: "",
-      type: modal.data.channelType || ChannelType.TEXT,
+      type: modal.data.channel?.type || ChannelType.TEXT,
     },
     resolver: zodResolver(formSchema),
   });
 
   useEffect(() => {
-    if (!modal.data.channelType) return;
-    form.setValue("type", modal.data.channelType);
+    if (modal.data.channelType) {
+      form.setValue("type", modal.data.channelType);
+    }
+    if (modal.data.channel) {
+      form.setValue("name", modal.data.channel.name);
+    }
   }, [modal]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await axios.post<S_ServerWithChannelWithProfileResponse>(
-        `/api/channel?serverId=${modal.data.server?.id}`,
+      const res = await axios.patch<S_ServerWithChannelWithProfileResponse>(
+        `/api/channel/${modal.data.channel?.id}?serverId=${modal.data.server?.id}`,
         values
       );
       if (!res.data.success) {
         throw new Error(res.data.message);
       }
-      await mutate("/api/server");
-      modal.onOpen("createChannel", { server: res.data.data });
-      toast.success("Channel created");
+      await mutate(`/api/server/${modal.data.server?.id}`);
+      modal.onOpen("editChannel", { server: res.data.data });
+      toast.success("Channel edited");
       form.reset();
       modal.onClose();
     } catch (err) {
@@ -78,7 +82,7 @@ const CreateChannelModal = () => {
   };
   return (
     <Dialog
-      open={modal.type == "createChannel" && modal.isOpen}
+      open={modal.type == "editChannel" && modal.isOpen}
       onOpenChange={() => {
         modal.onClose();
       }}
@@ -86,8 +90,8 @@ const CreateChannelModal = () => {
       <DialogContent className="p-0 offset-0">
         <MotionDivUp>
           <DialogHeader className="pt-5 mb-5">
-            <DialogTitle>Create channel</DialogTitle>
-            <DialogDescription>Cooking new channel</DialogDescription>
+            <DialogTitle>Edit channel</DialogTitle>
+            <DialogDescription>Cooking this channel</DialogDescription>
           </DialogHeader>
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -98,7 +102,7 @@ const CreateChannelModal = () => {
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-center w-full h-fit">
                       <FormLabel className="w-full text-left">
-                        Enter your channel name
+                        Edit your channel name
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -115,7 +119,7 @@ const CreateChannelModal = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start w-full">
-                      <FormLabel>Pick your server type</FormLabel>
+                      <FormLabel>Edit your channel type</FormLabel>
                       <FormControl>
                         <Select
                           defaultValue={field.value}
@@ -147,7 +151,7 @@ const CreateChannelModal = () => {
                   variant="primary"
                   disabled={form.formState.isSubmitting}
                 >
-                  Create
+                  Edit
                 </Button>
               </DialogFooter>
             </form>
@@ -158,4 +162,4 @@ const CreateChannelModal = () => {
   );
 };
 
-export default CreateChannelModal;
+export default EditChannelModal;
