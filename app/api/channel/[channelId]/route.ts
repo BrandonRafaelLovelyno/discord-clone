@@ -1,6 +1,7 @@
 import options from "@/lib/auth/option";
 import prismadb from "@/lib/orm/prismadb";
 import { MemberRole } from "@prisma/client";
+import { url } from "inspector";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -63,6 +64,48 @@ export async function PATCH(
       success: true,
       data: updatedServer,
       message: "",
+    });
+  } catch (err) {
+    return NextResponse.json({
+      success: false,
+      message: (err as Error).message,
+      data: {},
+    });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { channelId: string } }
+) {
+  try {
+    const session = await getServerSession(options);
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+    const url = new URL(req.url);
+    const serverId = url.searchParams.get("serverId");
+    if (!params.channelId || !serverId) {
+      throw new Error("Missing fields");
+    }
+    const channel = await prismadb.channel.findUnique({
+      where: {
+        id: params.channelId,
+      },
+    });
+    const member = await prismadb.member.findFirst({
+      where: {
+        profileId: session.user.profileId,
+        serverId,
+      },
+    });
+    if (!member) {
+      throw new Error("Unauthorized");
+    }
+    return NextResponse.json({
+      success: true,
+      message: "",
+      data: channel,
     });
   } catch (err) {
     return NextResponse.json({

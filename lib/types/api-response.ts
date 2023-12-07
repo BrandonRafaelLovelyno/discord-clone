@@ -1,4 +1,4 @@
-import { MemberRole, Profile, Server } from "@prisma/client";
+import { Channel, MemberRole, Profile, Server } from "@prisma/client";
 import { ServerWithChannelWithMemberWithProfile } from "./collection";
 
 export interface APIResponse {
@@ -29,4 +29,8 @@ export interface S_ServerWithChannelWithProfileResponse extends APIResponse {
 
 export interface S_ServerWithRoleResponse extends APIResponse {
   data: { server: ServerWithChannelWithMemberWithProfile; role: MemberRole };
+}
+
+export interface S_ChannelResponse extends APIResponse {
+  data: Channel;
 }
