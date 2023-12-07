@@ -83,7 +83,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
       });
       return [text, audio, video];
     }
-  }, [serverLoading, serverData, isValidating]);
+  }, [serverLoading, serverData]);
   const body: React.ReactElement = useMemo(() => {
     if (serverLoading || !usedServer) {
       return (

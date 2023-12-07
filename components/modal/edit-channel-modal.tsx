@@ -54,11 +54,9 @@ const EditChannelModal = () => {
   });
 
   useEffect(() => {
-    if (modal.data.channelType) {
-      form.setValue("type", modal.data.channelType);
-    }
     if (modal.data.channel) {
       form.setValue("name", modal.data.channel.name);
+      form.setValue("type", modal.data.channel.type);
     }
   }, [modal]);
 

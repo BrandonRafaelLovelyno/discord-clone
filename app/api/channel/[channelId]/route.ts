@@ -22,7 +22,7 @@ export async function PATCH(
     if (!session) {
       throw new Error("Unauthorized");
     }
-    const updatedChannel = await prismadb.server.update({
+    const updatedServer = await prismadb.server.update({
       where: {
         id: serverId,
         members: {
@@ -47,13 +47,21 @@ export async function PATCH(
           },
         },
       },
+      include: {
+        channels: true,
+        members: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     });
-    if (!updatedChannel) {
+    if (!updatedServer) {
       throw new Error("Invalid channelId");
     }
     return NextResponse.json({
       success: true,
-      data: updatedChannel,
+      data: updatedServer,
       message: "",
     });
   } catch (err) {
