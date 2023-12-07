@@ -25,7 +25,7 @@ const NavigationItem: React.FC<NavigationItemProps> = ({ server }) => {
       <div
         className={cn(
           "transition-all duration-150 w-[6px] rounded-t-lg rounded-b-lg",
-          params?.serverId == server.id && "h-[50px] bg-white",
+          params?.serverId == server.id && "h-[50px] dark:bg-white bg-black",
           params?.serverId != server.id &&
             "h-[10px] group-hover:bg-gray-300 bg-gray-500 group-hover:h-[30px]"
         )}

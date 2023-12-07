@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import React, { useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import ActionTooltip from "../action-tooltip";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Lock, Trash } from "lucide-react";
 
 interface ServerChannelProps {
   id: string;
@@ -56,6 +56,9 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
             <Trash className="w-4 h-4 text-zinc-400" />
           </ActionTooltip>
         </div>
+      )}
+      {channel.name == "General" && (
+        <Lock className="w-4 h-4 ml-auto text-zinc-400" />
       )}
     </button>
   );
