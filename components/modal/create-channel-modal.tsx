@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Select,
   SelectContent,
@@ -44,13 +44,20 @@ const formSchema = z.object({
 const CreateChannelModal = () => {
   const { mutate } = useSWRConfig();
   const modal = useModal();
+
   const form = useForm({
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: modal.data.channelType || ChannelType.TEXT,
     },
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    if (!modal.data.channelType) return;
+    form.setValue("type", modal.data.channelType);
+  }, [modal]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const res = await axios.post<S_ServerWithChannelWithProfileResponse>(

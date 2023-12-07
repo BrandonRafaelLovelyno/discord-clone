@@ -13,6 +13,7 @@ interface ServerSectionProps {
   server: ServerWithChannelWithMemberWithProfile;
   sectionType: objType;
   label: string;
+  channelType?: ChannelType;
 }
 
 const ServerSection: React.FC<ServerSectionProps> = ({
@@ -20,6 +21,7 @@ const ServerSection: React.FC<ServerSectionProps> = ({
   role,
   server,
   sectionType,
+  channelType,
 }) => {
   const modal = useModal();
   return (
@@ -27,10 +29,10 @@ const ServerSection: React.FC<ServerSectionProps> = ({
       <div className="flex justify-between w-full">
         <p className="text-xs font-bold text-gray-500 uppercase">{label}</p>
         {role !== MemberRole.GUEST && sectionType == "channel" && (
-          <ActionTooltip label="Create server" align="center" side="right">
+          <ActionTooltip label="Create channel" align="center" side="right">
             <button
               className="text-gray-500 duration-200 hover:text-gray-300"
-              onClick={() => modal.onOpen("createChannel", { server })}
+              onClick={() => modal.onOpen("createChannel", { channelType })}
             >
               <Plus className="w-4 h-4" />
             </button>

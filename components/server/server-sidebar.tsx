@@ -141,6 +141,13 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
                   sectionType="channel"
                   server={usedServer}
                   key={"text-ch"}
+                  channelType={
+                    index == 0
+                      ? ChannelType.TEXT
+                      : index == 1
+                      ? ChannelType.AUDIO
+                      : ChannelType.VIDEO
+                  }
                 />
                 {cT.map((ch) => (
                   <MotionDivUp
@@ -150,7 +157,6 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
                   >
                     <ServerChannel
                       channel={ch}
-                      id={ch.id}
                       role={role!}
                       server={usedServer}
                       icon={iconMap[ch.type]}
