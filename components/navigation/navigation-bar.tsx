@@ -11,11 +11,7 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 import { ThemeToggler } from "../theme-toggler";
 import MotionDivUp from "../animation/motion-div-up";
 
-interface NavigationBarProps {
-  profileId: string;
-}
-
-const NavigationBar: React.FC<NavigationBarProps> = () => {
+const NavigationBar: React.FC = () => {
   const { data: serverData, isLoading: serverLoading } = useServer({});
   if (serverLoading || !serverData?.data) {
     return <></>;
