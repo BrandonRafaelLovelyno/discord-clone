@@ -29,11 +29,22 @@ interface ModalStore {
   onClose: () => void;
 }
 
-const useModal = create<ModalStore>((set) => ({
+const useModal = create<ModalStore>((set, get) => ({
   data: {},
   isOpen: false,
   onClose: () => set({ isOpen: false }),
-  onOpen: (type, data = {}) => set({ type, isOpen: true, data }),
+  onOpen: (type, data = {}) => {
+    const { channelType, channel, server } = data;
+    if ((channelType && !server) || (channel && !server)) {
+      set({
+        type,
+        isOpen: true,
+        data: { channelType, channel, server: get().data.server },
+      });
+    } else {
+      set({ type, isOpen: true, data });
+    }
+  },
   type: "createServer",
 }));
 
