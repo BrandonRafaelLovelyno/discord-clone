@@ -18,9 +18,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
   );
   const body: React.ReactNode = useMemo(() => {
     if (!channelData || channelLoading || !channelData.success) {
-      return (
-        <div className="h-12 border-b-2 border-neutral-200 dark:border-neutral-800" />
-      );
+      return <></>;
     } else {
       return (
         <ChatHeader

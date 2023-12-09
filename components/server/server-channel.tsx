@@ -8,6 +8,7 @@ import { twMerge } from "tailwind-merge";
 import ActionTooltip from "../action-tooltip";
 import { Edit, Lock, Trash } from "lucide-react";
 import useModal from "@/hooks/useModal";
+import { useRouter } from "next/navigation";
 
 interface ServerChannelProps {
   server: Server;
@@ -30,12 +31,14 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
     }
     return false;
   }, [params]);
+  const router = useRouter();
   return (
     <button
       className={twMerge(
         "w-full py-1 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 px-3 group duration-150 flex",
         isChannel && "bg-zinc-700/20 dark:bg-zinc-700"
       )}
+      onClick={() => router.push(`/server/${server.id}/channel/${channel.id}`)}
     >
       {icon}
       <p
@@ -52,13 +55,19 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
           <ActionTooltip align="center" side="top" label="Edit">
             <Edit
               className="w-4 h-4 text-zinc-400"
-              onClick={() => modal.onOpen("editChannel", { channel })}
+              onClick={(e) => {
+                e.stopPropagation();
+                modal.onOpen("editChannel", { channel });
+              }}
             />
           </ActionTooltip>
           <ActionTooltip align="center" side="top" label="Delete">
             <Trash
               className="w-4 h-4 text-zinc-400"
-              onClick={() => modal.onOpen("deleteChannel", { channel })}
+              onClick={(e) => {
+                e.stopPropagation();
+                modal.onOpen("deleteChannel", { channel });
+              }}
             />
           </ActionTooltip>
         </div>
