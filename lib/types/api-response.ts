@@ -1,5 +1,15 @@
-import { Channel, MemberRole, Profile, Server } from "@prisma/client";
-import { ServerWithChannelWithMemberWithProfile } from "./collection";
+import {
+  Channel,
+  Conversation,
+  Member,
+  MemberRole,
+  Profile,
+  Server,
+} from "@prisma/client";
+import {
+  ConversationWithMember,
+  ServerWithChannelWithMemberWithProfile,
+} from "./collection";
 
 export interface APIResponse {
   success: boolean;
@@ -33,4 +43,11 @@ export interface S_ServerWithRoleResponse extends APIResponse {
 
 export interface S_ChannelResponse extends APIResponse {
   data: Channel;
+}
+
+export interface S_ConversationWithOther extends APIResponse {
+  data: {
+    conversation: ConversationWithMember;
+    otherMember: Member;
+  };
 }

@@ -32,6 +32,7 @@ export async function GET(req: Request) {
         imageUrl: currentUser.image || "",
       },
     });
+    session.user.profileId = newProfile.id;
     const returnedServer = await prismadb.server.findFirst({
       where: {
         members: {

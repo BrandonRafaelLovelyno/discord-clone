@@ -9,7 +9,7 @@ import { signIn } from "next-auth/react";
 import MotionDivPage from "@/components/animation/motion-div-page";
 
 export default function Home() {
-  const { data: setUpData, isLoading: setUpLoading, mutate } = useSetUp();
+  const { data: setUpData, isLoading: setUpLoading } = useSetUp();
   const body: React.ReactElement = useMemo(() => {
     if (setUpLoading) {
       return <ColorRingLoader width={200} height={200} />;
@@ -25,7 +25,6 @@ export default function Home() {
       }
     }
   }, [setUpLoading]);
-
   return (
     <MotionDivPage
       key={"set-up-screen"}
