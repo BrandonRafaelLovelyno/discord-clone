@@ -43,7 +43,7 @@ export async function getOrCreateConversation(
 }
 
 async function createNewConversation(memberOneId: string, memberTwoId: string) {
-  return await prismadb.conversation.create({
+  const conversation = await prismadb.conversation.create({
     data: {
       memberOneId,
       memberTwoId,
@@ -61,4 +61,5 @@ async function createNewConversation(memberOneId: string, memberTwoId: string) {
       },
     },
   });
+  return conversation;
 }

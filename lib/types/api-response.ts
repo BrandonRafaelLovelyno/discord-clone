@@ -7,7 +7,8 @@ import {
   Server,
 } from "@prisma/client";
 import {
-  ConversationWithMember,
+  ConversationWithMemberWithProfile,
+  MemberWithProfile,
   ServerWithChannelWithMemberWithProfile,
 } from "./collection";
 
@@ -47,7 +48,7 @@ export interface S_ChannelResponse extends APIResponse {
 
 export interface S_ConversationWithOther extends APIResponse {
   data: {
-    conversation: ConversationWithMember;
-    otherMember: Member;
+    conversation: ConversationWithMemberWithProfile;
+    otherMember: MemberWithProfile;
   };
 }

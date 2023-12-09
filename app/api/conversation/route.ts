@@ -8,24 +8,32 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const memberId = url.searchParams.get("memberId");
-    if (!memberId) {
+    const serverId = url.searchParams.get("serverId");
+    if (!memberId || !serverId) {
       throw new Error("Missing fields");
     }
     const session = await getServerSession(options);
     if (!session) {
       throw new Error("Unauthorized");
     }
-    const profile = await prismadb.profile.findUnique({
+    const theMember = await prismadb.member.findUnique({
       where: {
-        id: session.user.profileId,
+        id: memberId,
+        serverId,
       },
     });
-    if (!profile) {
-      throw new Error("Unauthorized");
+    const ourMember = await prismadb.member.findFirst({
+      where: {
+        serverId,
+        profileId: session.user.profileId,
+      },
+    });
+    if (!theMember || !ourMember) {
+      throw new Error("Invalid memberId");
     }
-    const conversation = await getOrCreateConversation(profile.id, memberId);
+    const conversation = await getOrCreateConversation(ourMember.id, memberId);
     const otherMember =
-      profile.id == conversation.memberOneId
+      session.user.profileId == conversation.memberOneId
         ? conversation.memberTwo
         : conversation.memberOne;
     return NextResponse.json({
