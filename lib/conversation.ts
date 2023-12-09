@@ -1,9 +1,6 @@
 import prismadb from "./orm/prismadb";
 
-export async function findConversation(
-  memberOneId: string,
-  memberTwoId: string
-) {
+async function findConversation(memberOneId: string, memberTwoId: string) {
   try {
     const conversation = await prismadb.conversation.findFirst({
       where: {
@@ -45,10 +42,7 @@ export async function getOrCreateConversation(
   return conversation;
 }
 
-export async function createNewConversation(
-  memberOneId: string,
-  memberTwoId: string
-) {
+async function createNewConversation(memberOneId: string, memberTwoId: string) {
   return await prismadb.conversation.create({
     data: {
       memberOneId,

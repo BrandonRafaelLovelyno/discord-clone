@@ -51,10 +51,13 @@ export async function POST(
       message: "",
     });
   } catch (err) {
-    return NextResponse.json({
-      success: false,
-      message: (err as Error).message,
-      data: {},
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: (err as Error).message,
+        data: {},
+      },
+      { status: 400 }
+    );
   }
 }

@@ -19,10 +19,10 @@ const ServerLayout: React.FC<ServerLayoutProps> = ({ children, params }) => {
     serverId: params.serverId,
   });
   useEffect(() => {
-    if (serverLoading) {
+    if (serverLoading || !serverData) {
       return;
     }
-    if (!(serverData as S_ServerWithRoleResponse)?.success) {
+    if (!(serverData as S_ServerWithRoleResponse).success) {
       return redirect("/");
     }
   }, [serverData, serverLoading]);

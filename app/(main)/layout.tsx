@@ -11,12 +11,12 @@ export default function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, status: sessionStatus } = useSession();
+  const { status: sessionStatus } = useSession();
   const navbar: React.ReactElement = useMemo(() => {
     if (sessionStatus !== "authenticated") {
       return <></>;
     } else {
-      return <NavigationBar profileId={session.user.profileId} />;
+      return <NavigationBar />;
     }
   }, [sessionStatus]);
   if (sessionStatus == "unauthenticated") {

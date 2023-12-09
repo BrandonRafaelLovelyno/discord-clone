@@ -20,10 +20,13 @@ export async function PATCH(
     }
     return NextResponse.json({ success: true, message: "", data: server });
   } catch (err) {
-    return NextResponse.json({
-      success: false,
-      message: (err as Error).message,
-      data: {},
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: (err as Error).message,
+        data: {},
+      },
+      { status: 400 }
+    );
   }
 }

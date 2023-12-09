@@ -66,11 +66,14 @@ export async function PATCH(
       message: "",
     });
   } catch (err) {
-    return NextResponse.json({
-      success: false,
-      message: (err as Error).message,
-      data: {},
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: (err as Error).message,
+        data: {},
+      },
+      { status: 400 }
+    );
   }
 }
 
@@ -108,10 +111,13 @@ export async function GET(
       data: channel,
     });
   } catch (err) {
-    return NextResponse.json({
-      success: false,
-      message: (err as Error).message,
-      data: {},
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: (err as Error).message,
+        data: {},
+      },
+      { status: 400 }
+    );
   }
 }
