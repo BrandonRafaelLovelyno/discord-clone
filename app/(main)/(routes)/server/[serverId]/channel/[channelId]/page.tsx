@@ -1,6 +1,7 @@
 "use client";
 
 import ChatHeader from "@/components/chat/chat-header";
+import ThreeCircleLoader from "@/components/loader/three-circle";
 import useChannel from "@/hooks/fetching/channel/useChannel";
 import React, { useMemo } from "react";
 
@@ -18,19 +19,25 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
   );
   const body: React.ReactNode = useMemo(() => {
     if (!channelData || channelLoading || !channelData.success) {
-      return <></>;
+      return (
+        <div className="flex items-center justify-center w-full h-full">
+          <ThreeCircleLoader size={100} />
+        </div>
+      );
     } else {
       return (
-        <ChatHeader
-          name={channelData.data.name}
-          serverId={params.serverId}
-          type="channel"
-          imageUrl=""
-        />
+        <div className="flex flex-col w-full h-full">
+          <ChatHeader
+            name={channelData.data.name}
+            serverId={params.serverId}
+            type="channel"
+            imageUrl=""
+          />
+        </div>
       );
     }
   }, [channelData, channelLoading]);
-  return <div>{body}</div>;
+  return <>{body}</>;
 };
 
 export default ChannelPage;

@@ -1,5 +1,6 @@
 "use client";
 
+import ChatHeader from "@/components/chat/chat-header";
 import ThreeCircleLoader from "@/components/loader/three-circle";
 import useConversation from "@/hooks/fetching/conversation/useConversation";
 import React, { useMemo } from "react";
@@ -18,8 +19,16 @@ const MemberPage: React.FC<MemberPageProps> = ({ params }) => {
     if (conversationLoading || !conversationData) {
       return <ThreeCircleLoader size={100} />;
     } else {
-      console.log(conversationData);
-      return <p>talking to {conversationData.data.otherMember.profile.name}</p>;
+      return (
+        <div className="flex flex-col w-full h-full">
+          <ChatHeader
+            name={conversationData.data.otherMember.profile.name}
+            serverId={params.serverId}
+            type="conversation"
+            imageUrl={conversationData.data.otherMember.profile.imageUrl}
+          />
+        </div>
+      );
     }
   }, [conversationData, conversationLoading]);
   return <div className="w-full h-full">{body}</div>;

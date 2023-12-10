@@ -16,6 +16,7 @@ import ServerSection from "./server-section";
 import ServerChannel from "./server-channel";
 import { ServerWithChannelWithMemberWithProfile } from "@/lib/types/collection";
 import ServerMember from "./server-member";
+import { useSession } from "next-auth/react";
 
 interface ServerSideBarProps {
   serverId: string;
@@ -40,6 +41,7 @@ const channelType = ["AUDIO", "TEXT", "VIDEO"];
 export type objType = "member" | "channel";
 
 const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
+  const { data: session, status: sessionStatus } = useSession();
   const {
     data: serverData,
     isLoading: serverLoading,
@@ -85,7 +87,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
     }
   }, [serverLoading, serverData]);
   const body: React.ReactElement = useMemo(() => {
-    if (serverLoading || !usedServer) {
+    if (serverLoading || !usedServer || sessionStatus !== "authenticated") {
       return (
         <MotionDivUp key="loader">
           <PuffLoader height={60} width={60} />
@@ -171,16 +173,28 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
               sectionType="member"
               server={usedServer}
             />
-            {usedServer.members.map((m) => (
-              <MotionDivUp delay={Math.random() + 1} className="mb-2">
-                <ServerMember member={m} server={usedServer} key={m.id} />
-              </MotionDivUp>
-            ))}
+            {usedServer.members.map((m) => {
+              if (m.profileId != session.user.profileId) {
+                return (
+                  <MotionDivUp delay={Math.random() + 1} className="mb-2">
+                    <ServerMember member={m} server={usedServer} key={m.id} />
+                  </MotionDivUp>
+                );
+              }
+            })}
           </ScrollArea>
         </MotionDivUp>
       );
     }
-  }, [serverLoading, serverData, isValidating, channelPerType, role]);
+  }, [
+    serverLoading,
+    serverData,
+    isValidating,
+    channelPerType,
+    role,
+    session,
+    sessionStatus,
+  ]);
   return (
     <div className="dark:bg-[#2B2D31] bg-[#F2F3F5] h-full w-full flex flex-col justify-center items-center">
       {body}
