@@ -37,7 +37,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
           <div className="flex flex-col flex-1 w-full">
             <div className="mt-auto ">
               <ChatInput
-                apiUrl="/api/socket/chat"
+                apiUrl="/api/socket/message"
                 type="channel"
                 name={channelData.data.name.toLowerCase()}
                 query={{
