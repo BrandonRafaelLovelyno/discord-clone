@@ -3,6 +3,7 @@ import React from "react";
 import MobileToggle from "../mobile-toggle";
 import MotionDivDown from "../animation/motion-div-down";
 import ProfileAvatar from "../profile-avatar";
+import SocketBadge from "../socket-badge";
 
 interface ChatHeaderProps {
   type: "channel" | "conversation";
@@ -18,7 +19,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   imageUrl,
 }) => {
   return (
-    <MotionDivDown className="flex items-center h-12 pl-3 border-b-2 gap-x-2 border-neutral-200 dark:border-neutral-800">
+    <MotionDivDown className="flex items-center h-12 px-3 border-b-2 gap-x-2 border-neutral-200 dark:border-neutral-800">
       <div className="md:hidden">
         <MobileToggle serverId={serverId} />
       </div>
@@ -29,6 +30,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         <ProfileAvatar imageUrl={imageUrl!} className="w-8 h-8 md:w-8 md:h-8" />
       )}
       <p className="text-lg font-bold text-white lowercase">{name}</p>
+      <div className="ml-auto">
+        <SocketBadge />
+      </div>
     </MotionDivDown>
   );
 };

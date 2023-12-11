@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import MotionDivPage from "@/components/animation/motion-div-page";
 import { Toaster } from "react-hot-toast";
 import ModalProvider from "@/components/provider/modal-provider";
+import SocketProvider from "@/components/provider/socket-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -57,8 +58,10 @@ export default async function RootLayout({
                 }}
               />
               <main className="relative w-full h-full overflow-hidden">
-                <ModalProvider />
-                {children}
+                <SocketProvider>
+                  <ModalProvider />
+                  {children}
+                </SocketProvider>
               </main>
             </AnimatePresence>
           </ThemeProvider>
