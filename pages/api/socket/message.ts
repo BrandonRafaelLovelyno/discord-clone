@@ -26,7 +26,7 @@ export default async function handler(
     const { serverId, channelId } = req.query;
     const { content, fileUrl } = req.body;
 
-    if (!content || !fileUrl || !channelId || !serverId) {
+    if (!content || !channelId || !serverId) {
       return res.status(400).json({
         success: false,
         message: "Missing fields",

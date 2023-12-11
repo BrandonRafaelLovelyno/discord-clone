@@ -8,6 +8,8 @@ import { Plus, Smile } from "lucide-react";
 import axios from "axios";
 import qs from "query-string";
 import useModal from "@/hooks/useModal";
+import { APIResponse } from "@/lib/types/api-response";
+import { toast } from "react-hot-toast";
 
 interface ChatInputProps {
   name: string;
@@ -35,9 +37,14 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
         url: apiUrl,
         query,
       });
-      const res = await axios.post(url, values);
+      const res = await axios.post<APIResponse>(url, values);
+      if (!res.data.success) {
+        throw new Error(res.data.message);
+      }
       form.reset();
-    } catch (err) {}
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
   };
   return (
     <FormProvider {...form}>
