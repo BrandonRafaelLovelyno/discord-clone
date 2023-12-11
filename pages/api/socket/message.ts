@@ -3,20 +3,36 @@ import prismadb from "@/lib/orm/prismadb";
 import { NextApiResponseServerIo } from "@/lib/types/socket";
 import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
+import { getSession } from "next-auth/react";
 
-export async function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponseServerIo
 ) {
   try {
-    const session = await getServerSession(options);
+    if (req.method !== "POST") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid method",
+        data: {},
+      });
+    }
+    const session = await getServerSession(req, res, options);
     if (!session) {
       return res
         .status(402)
         .json({ success: false, message: "Unauthorized", data: {} });
     }
     const { serverId, channelId } = req.query;
-    const { chat, fileUrl } = req.body;
+    const { content, fileUrl } = req.body;
+
+    if (!content || !fileUrl || !channelId || !serverId) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing fields",
+        data: {},
+      });
+    }
 
     const server = await prismadb.server.findUnique({
       where: {
@@ -58,12 +74,13 @@ export async function handler(
     const message = await prismadb.message.create({
       data: {
         fileUrl: fileUrl as string,
-        content: chat as string,
+        content: content as string,
         memberId: member.id,
         channelId: channelId as string,
       },
     });
     const socketKey = `channel:${channelId}:message`;
+
     res.socket.server.io.emit(socketKey, message);
     return res.status(200).json({
       success: true,
@@ -74,7 +91,7 @@ export async function handler(
     return res.status(500).json({
       success: false,
       data: {},
-      message: "Internal server error",
+      message: (err as Error).message,
     });
   }
 }

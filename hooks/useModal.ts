@@ -16,6 +16,8 @@ export type ModalType =
   | "deleteMessage";
 
 interface ModalData {
+  apiUrl?: string;
+  query?: Record<string, any>;
   server?: ServerWithChannelWithMemberWithProfile;
   channelType?: ChannelType;
   channel?: Channel;
@@ -34,12 +36,18 @@ const useModal = create<ModalStore>((set, get) => ({
   isOpen: false,
   onClose: () => set({ isOpen: false }),
   onOpen: (type, data = {}) => {
-    const { channelType, channel, server } = data;
-    if ((channelType && !server) || (channel && !server)) {
+    const { channelType, channel, server, apiUrl, query } = data;
+    if (!server) {
       set({
         type,
         isOpen: true,
-        data: { channelType, channel, server: get().data.server },
+        data: {
+          channelType,
+          channel,
+          apiUrl,
+          query,
+          server: get().data.server,
+        },
       });
     } else {
       set({ type, isOpen: true, data });

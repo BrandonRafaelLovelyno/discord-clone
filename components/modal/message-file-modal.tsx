@@ -1,6 +1,4 @@
 "use client";
-
-import { S_ServerResponse } from "@/lib/types/api-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Dialog,
@@ -11,9 +9,10 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import axios from "axios";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import qs from "query-string";
 import * as z from "zod";
 import {
   FormControl,
@@ -23,110 +22,83 @@ import {
   FormMessage,
 } from "../ui/form";
 import FileUpload from "../file-upload";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import useModal from "@/hooks/useModal";
 import MotionDivUp from "../animation/motion-div-up";
-import { useSWRConfig } from "swr";
 import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: "Your server needs a name" }),
-  imageUrl: z.string(),
+  fileUrl: z.string().min(1, "Please attach a pdf/img"),
 });
 
-const CreateServerModal = () => {
+const MessageFileModal = () => {
   const { data: session } = useSession();
   const modal = useModal();
-  const { mutate } = useSWRConfig();
+  const form = useForm({
+    defaultValues: {
+      fileUrl: "",
+    },
+    resolver: zodResolver(formSchema),
+  });
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => {
       try {
-        const res = await axios.post<S_ServerResponse>("/api/server", values);
+        const url = qs.stringifyUrl({
+          url: modal.data.apiUrl || "",
+          query: modal.data.query,
+        });
+        const res = await axios.post(url, {
+          ...values,
+          content: values.fileUrl,
+        });
         if (!res.data.success) {
           throw new Error(res.data.message);
         }
-        toast.success(`You have created the ${res.data.data.name} server`);
-        setTimeout(() => {
-          form.reset();
-          modal.onClose();
-        }, 200);
-        mutate(`/api/server`);
-        mutate(`/api/server/${modal.data.server?.id}`);
+        toast.success("File uploaded");
+        form.reset();
+        modal.onClose();
       } catch (err) {
         toast.error((err as Error).message);
       }
     },
-    [session?.user, modal.data.server]
+    [modal.data.apiUrl, modal.data.query]
   );
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      imageUrl: "",
-    },
-    resolver: zodResolver(formSchema),
-  });
-
-  const handleClose = () => {
-    form.reset();
-    modal.onClose();
-  };
 
   return (
     <Dialog
-      open={modal.isOpen && modal.type == "createServer"}
-      onOpenChange={handleClose}
+      open={modal.isOpen && modal.type == "messageFile"}
+      onOpenChange={modal.onClose}
     >
       <MotionDivUp>
         <DialogContent className="p-0 offset-0">
           <DialogHeader className="pt-5">
-            <DialogTitle className="text-center">Create server</DialogTitle>
+            <DialogTitle className="text-center">Attach File</DialogTitle>
             <DialogDescription className="text-center">
-              Give your server personality with an image and a title
+              Attach a pdf or an image file
             </DialogDescription>
           </DialogHeader>
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex flex-col items-center justify-center px-5 gap-y-8">
                 <FormField
-                  name="imageUrl"
+                  name="fileUrl"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-center w-full h-fit">
-                      <FormLabel className="self-start font-bold text-left">
-                        Server Image
+                      <FormLabel className="self-start mb-5 font-bold text-left">
+                        Attachment
                       </FormLabel>
-                      <div className="flex justify-center w-full mt-5 rounded-md cursor-pointer">
+                      <div className="flex justify-center w-full rounded-md cursor-pointer mt-7">
                         <FormControl>
                           <FileUpload
-                            isSubmitting={form.formState.isSubmitting}
-                            endpoint="serverImage"
+                            endpoint="messageFile"
                             onChange={field.onChange}
                             value={field.value}
+                            isSubmitting={form.formState.isSubmitting}
                           />
                         </FormControl>
                       </div>
                       <FormMessage className="w-full font-bold text-left" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  name="name"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel className="mb-5 font-bold text-left">
-                        Server name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Localhost"
-                          className=""
-                          disabled={form.formState.isSubmitting}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="font-bold" />
                     </FormItem>
                   )}
                 />
@@ -136,7 +108,7 @@ const CreateServerModal = () => {
                   variant="primary"
                   disabled={form.formState.isSubmitting}
                 >
-                  Create
+                  Send
                 </Button>
               </DialogFooter>
             </form>
@@ -147,4 +119,4 @@ const CreateServerModal = () => {
   );
 };
 
-export default CreateServerModal;
+export default MessageFileModal;

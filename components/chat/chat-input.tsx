@@ -7,6 +7,7 @@ import { Input } from "../ui/input";
 import { Plus, Smile } from "lucide-react";
 import axios from "axios";
 import qs from "query-string";
+import useModal from "@/hooks/useModal";
 
 interface ChatInputProps {
   name: string;
@@ -16,14 +17,15 @@ interface ChatInputProps {
 }
 
 const formSchema = z.object({
-  chat: z.string().min(1),
+  content: z.string().min(1),
 });
 
 const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
+  const modal = useModal();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      chat: "",
+      content: "",
     },
   });
   const isLoading: boolean = form.formState.isSubmitting;
@@ -41,7 +43,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
-          name="chat"
+          name="content"
           control={form.control}
           render={({ field }) => (
             <FormItem>
@@ -50,6 +52,12 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
                   <button
                     type="button"
                     className="absolute top-7 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 dark:hover:bg-zinc-300 transition rounded-full p-1 flex items-center justify-center"
+                    onClick={() =>
+                      modal.onOpen("messageFile", {
+                        apiUrl,
+                        query,
+                      })
+                    }
                   >
                     <Plus className="text-white dark:text-[#313338]" />
                   </button>

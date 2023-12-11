@@ -3,7 +3,7 @@
 import { UploadDropzone } from "@/lib/upload/uploadthing";
 import React from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { File, X } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion as m } from "framer-motion";
 import "@uploadthing/react/styles.css";
@@ -40,9 +40,41 @@ const FileUpload: React.FC<FileUploadProps> = ({
           className="rounded-full"
         />
         <button
-          className="absolute flex items-center justify-center w-3 h-3 bg-red-500 rounded-full -top-2 -right-2"
+          type="button"
+          className="absolute flex items-center justify-center w-5 h-5 bg-red-500 rounded-full -top-4 right-1"
           onClick={() => onChange("")}
           disabled={isSubmitting}
+        >
+          <X />
+        </button>
+      </m.div>
+    );
+  } else if (value && fileType == "pdf") {
+    return (
+      <m.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        exit={{ opacity: 0, y: -20 }}
+        key="non-image"
+        className="relative flex flex-row w-full bg-background/10"
+      >
+        <File className="w-10 h-10 fill-indigo-200 stroke-indigo-400" />
+        <div className="flex-1 ml-2">
+          <a
+            href={value}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
+          >
+            {value}
+          </a>
+        </div>
+        <button
+          type="button"
+          onClick={() => onChange("")}
+          disabled={isSubmitting}
+          className="absolute flex items-center justify-center w-5 h-5 bg-red-500 rounded-full -top-4 right-1"
         >
           <X />
         </button>
@@ -56,7 +88,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.2 }}
       exit={{ opacity: 0, y: -20 }}
-      key="non-image"
+      key="non-value"
     >
       <UploadDropzone
         endpoint={endpoint}
