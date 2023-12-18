@@ -27,7 +27,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
         </div>
       );
     } else {
-      const channelName: string = channelData.data.name.toLowerCase();
+      const channelName: string = channelData.data.channel.name.toLowerCase();
       return (
         <div className="flex flex-col w-full h-full bg-white dark:bg-[#313338]">
           <ChatHeader
@@ -39,9 +39,14 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
           <div className="flex flex-col flex-1 w-full">
             <div className="flex-1">
               <ChatMessage
+                paramKey="channelId"
                 apiUrl="/api/message"
                 chatId={params.channelId}
-                query={params}
+                socketQuery={{
+                  channelId: params.channelId,
+                  serverId: params.serverId,
+                }}
+                member={channelData.data.currentMember}
                 socketUrl="/api/socket/message"
                 type="channel"
                 name={channelName}

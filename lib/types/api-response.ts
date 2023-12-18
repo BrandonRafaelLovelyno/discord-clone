@@ -42,8 +42,11 @@ export interface S_ServerWithRoleResponse extends APIResponse {
   data: { server: ServerWithChannelWithMemberWithProfile; role: MemberRole };
 }
 
-export interface S_ChannelResponse extends APIResponse {
-  data: Channel;
+export interface S_ChannelResponseWithCurrentMember extends APIResponse {
+  data: {
+    channel: Channel;
+    currentMember: Member;
+  };
 }
 
 export interface S_ConversationWithOther extends APIResponse {

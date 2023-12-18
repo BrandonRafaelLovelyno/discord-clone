@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
         take: MESSAGE_BATCH,
         skip: 1,
         cursor: {
-          id: cursor.toString(),
+          id: cursor,
         },
         where: {
           channelId,
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
         },
       });
     }
-    let nextCursor;
+    let nextCursor = null;
     if (messages.length == MESSAGE_BATCH) {
       nextCursor = messages[MESSAGE_BATCH - 1].id;
     }

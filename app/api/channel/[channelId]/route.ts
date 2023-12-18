@@ -108,7 +108,7 @@ export async function GET(
     return NextResponse.json({
       success: true,
       message: "",
-      data: channel,
+      data: { channel, currentMember: member },
     });
   } catch (err) {
     return NextResponse.json(

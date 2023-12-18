@@ -1,4 +1,11 @@
-import { Channel, Conversation, Member, Profile, Server } from "@prisma/client";
+import {
+  Channel,
+  Conversation,
+  Member,
+  Message,
+  Profile,
+  Server,
+} from "@prisma/client";
 
 export type ServerWithMemberwithProfile = Server & {
   members: MemberWithProfile;
@@ -16,4 +23,10 @@ export type ConversationWithMemberWithProfile = Conversation & {
 
 export type MemberWithProfile = Member & {
   profile: Profile;
+};
+
+export type MessageWithMemberWithProfile = Message & {
+  member: Member & {
+    profile: Profile;
+  };
 };
