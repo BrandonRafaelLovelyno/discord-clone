@@ -2,6 +2,7 @@
 
 import ChatHeader from "@/components/chat/chat-header";
 import ChatInput from "@/components/chat/chat-input";
+import ChatMessage from "@/components/chat/chat-message";
 import ThreeCircleLoader from "@/components/loader/three-circle";
 import useChannel from "@/hooks/fetching/channel/useChannel";
 import React, { useMemo } from "react";
@@ -26,20 +27,31 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
         </div>
       );
     } else {
+      const channelName: string = channelData.data.name.toLowerCase();
       return (
         <div className="flex flex-col w-full h-full bg-white dark:bg-[#313338]">
           <ChatHeader
-            name={channelData.data.name}
+            name={channelName}
             serverId={params.serverId}
             type="channel"
             imageUrl=""
           />
           <div className="flex flex-col flex-1 w-full">
-            <div className="mt-auto ">
+            <div className="flex-1">
+              <ChatMessage
+                apiUrl="/api/message"
+                chatId={params.channelId}
+                query={params}
+                socketUrl="/api/socket/message"
+                type="channel"
+                name={channelName}
+              />
+            </div>
+            <div>
               <ChatInput
                 apiUrl="/api/socket/message"
                 type="channel"
-                name={channelData.data.name.toLowerCase()}
+                name={channelName.toLowerCase()}
                 query={{
                   serverId: params.serverId,
                   channelId: params.channelId,
