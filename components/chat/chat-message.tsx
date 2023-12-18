@@ -71,7 +71,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   }
 
   return (
-    <div className="flex flex-col w-full h-full py-4 overflow-y-auto">
+    <div className="flex flex-col w-full h-full py-4 ">
       <div className="flex-1" />
       <ChatWelcome name={name} type={type} />
       {data.pages.map(
