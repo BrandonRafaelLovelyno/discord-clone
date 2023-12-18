@@ -10,6 +10,7 @@ import qs from "query-string";
 import useModal from "@/hooks/useModal";
 import { APIResponse } from "@/lib/types/api-response";
 import { toast } from "react-hot-toast";
+import EmojiPicker from "../emoji-picker";
 
 interface ChatInputProps {
   name: string;
@@ -77,7 +78,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
                     className="py-6 border-0 border-none px-14 bg-zinc-200/90 dark:bg-zinc-700/75 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                   />
                   <div className="absolute top-7 right-8">
-                    <Smile />
+                    <EmojiPicker
+                      onChange={(emo: string) =>
+                        field.onChange(`${field.value} ${emo}`)
+                      }
+                    />
                   </div>
                 </div>
               </FormControl>

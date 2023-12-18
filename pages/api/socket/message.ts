@@ -3,7 +3,6 @@ import prismadb from "@/lib/orm/prismadb";
 import { NextApiResponseServerIo } from "@/lib/types/socket";
 import { NextApiRequest } from "next";
 import { getServerSession } from "next-auth";
-import { getSession } from "next-auth/react";
 
 export default async function handler(
   req: NextApiRequest,
