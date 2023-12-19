@@ -17,6 +17,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import MotionDivUp from "../animation/motion-div-up";
 import { toast } from "react-hot-toast";
+import qs from "query-string";
 
 interface KeyboardEvent {
   key: string;
@@ -90,9 +91,13 @@ const ChatItem: React.FC<ChatItemProps> = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const res = await axios.patch(`/api/message/${id}`, values);
-      if (!res.data.success) {
-        throw new Error(res.data.message);
+      const url = qs.stringifyUrl({
+        url: `${socketUrl}/${id}`,
+        query: socketQuery,
+      });
+      const res = await axios.patch(url, values);
+      if (!res.data) {
+        throw new Error("Failed to update with socket");
       }
       toast.success("Message edited");
       setIsEditing(false);
@@ -155,7 +160,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
           </div>
         )}
         {!fileUrl && !isEditing && (
-          <MotionDivUp key={`${id} message`}>
+          <MotionDivUp key={`${id} ${content} message`}>
             <p
               className={twMerge(
                 "text-sm text-zinc-600 dark:text-zinc-300",
@@ -173,7 +178,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
           </MotionDivUp>
         )}
         {!fileUrl && isEditing && (
-          <MotionDivUp key={`${id} edit`}>
+          <MotionDivUp key={`${id} ${content} edit`}>
             <FormProvider {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField

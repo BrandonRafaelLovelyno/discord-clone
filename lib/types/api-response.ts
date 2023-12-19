@@ -3,6 +3,7 @@ import {
   Conversation,
   Member,
   MemberRole,
+  Message,
   Profile,
   Server,
 } from "@prisma/client";
@@ -42,16 +43,21 @@ export interface S_ServerWithRoleResponse extends APIResponse {
   data: { server: ServerWithChannelWithMemberWithProfile; role: MemberRole };
 }
 
-export interface S_ChannelResponseWithCurrentMember extends APIResponse {
+export interface S_ChannelResponseWithCurrentMemberResponse
+  extends APIResponse {
   data: {
     channel: Channel;
     currentMember: Member;
   };
 }
 
-export interface S_ConversationWithOther extends APIResponse {
+export interface S_ConversationWithOtherResponse extends APIResponse {
   data: {
     conversation: ConversationWithMemberWithProfile;
     otherMember: MemberWithProfile;
   };
+}
+
+export interface S_MessageResponse extends APIResponse {
+  data: Message;
 }

@@ -1,9 +1,9 @@
 import fetcher from "@/lib/fetcher";
-import { S_ConversationWithOther } from "@/lib/types/api-response";
+import { S_ConversationWithOtherResponse } from "@/lib/types/api-response";
 import useSWR from "swr";
 
 const useConversation = (memberId: string, serverId: string) => {
-  const { data, isLoading, mutate } = useSWR<S_ConversationWithOther>(
+  const { data, isLoading, mutate } = useSWR<S_ConversationWithOtherResponse>(
     `/api/conversation?memberId=${memberId}&serverId=${serverId}`,
     fetcher
   );
