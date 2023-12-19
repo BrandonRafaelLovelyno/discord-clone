@@ -28,7 +28,7 @@ export default async function handler(
       });
     }
 
-    if (!content) {
+    if (req.method === "PATCH" && !content) {
       return res.status(400).json({
         success: false,
         message: "Missing fields",
@@ -129,6 +129,7 @@ export default async function handler(
           id: messageId as string,
         },
         data: {
+          content: "This message has been deleted",
           deleted: true,
         },
       });

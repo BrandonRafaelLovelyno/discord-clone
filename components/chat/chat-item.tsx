@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import MotionDivUp from "../animation/motion-div-up";
 import { toast } from "react-hot-toast";
 import qs from "query-string";
+import useModal from "@/hooks/useModal";
 
 interface KeyboardEvent {
   key: string;
@@ -106,6 +107,8 @@ const ChatItem: React.FC<ChatItemProps> = ({
     }
   };
 
+  const modal = useModal();
+
   const fileType = content.split(".").pop();
   const isPDF = content == fileUrl && fileType == "pdf";
   const isImage = content == fileUrl && !isPDF;
@@ -160,7 +163,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
           </div>
         )}
         {!fileUrl && !isEditing && (
-          <MotionDivUp key={`${id} ${content} message`}>
+          <MotionDivUp key={`${id} ${content} message ${isDeleted}`}>
             <p
               className={twMerge(
                 "text-sm text-zinc-600 dark:text-zinc-300",
@@ -178,7 +181,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
           </MotionDivUp>
         )}
         {!fileUrl && isEditing && (
-          <MotionDivUp key={`${id} ${content} edit`}>
+          <MotionDivUp key={`${id} ${content} edit ${isDeleted}`}>
             <FormProvider {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
@@ -221,7 +224,15 @@ const ChatItem: React.FC<ChatItemProps> = ({
               </ActionTooltip>
             )}
             <ActionTooltip label="Delete" align="end" side="top">
-              <Trash className="w-4 h-4 ml-auto transition cursor-pointer text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 " />
+              <Trash
+                className="w-4 h-4 ml-auto transition cursor-pointer text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 "
+                onClick={() => {
+                  modal.onOpen("deleteMessage", {
+                    apiUrl: `${socketUrl}/${id}`,
+                    query: socketQuery,
+                  });
+                }}
+              />
             </ActionTooltip>
           </div>
         )}
