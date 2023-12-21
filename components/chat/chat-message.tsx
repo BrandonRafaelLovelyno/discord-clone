@@ -8,6 +8,7 @@ import useChatQuery from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { MessageWithMemberWithProfile } from "@/lib/types/collection";
 import ChatItem from "./chat-item";
+import useChatSocket from "@/hooks/use-chat-socket";
 
 interface ChatMessageProps {
   apiUrl: string;
@@ -32,7 +33,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   member,
   name,
 }) => {
-  const queryKey = `chat:${chatId}`;
+  const queryKey = `channel:${chatId}`;
+  const addKey = `channel:${chatId}:message`;
+  const updateKey = `channel:${chatId}:message:update`;
   const {
     data,
     error,
@@ -47,6 +50,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     paramValue: chatId,
     queryKey,
   });
+
+  useChatSocket({ addKey, updateKey, queryKey });
 
   if (status == "pending") {
     return (
@@ -74,33 +79,35 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     <div className="flex flex-col w-full h-full py-4 ">
       <div className="flex-1" />
       <ChatWelcome name={name} type={type} />
-      {data.pages.map(
-        (
-          group: { data: { messages: MessageWithMemberWithProfile[] } },
-          index
-        ) => {
-          if (!group.data) return <></>;
-          return (
-            <Fragment key={index}>
-              {group.data.messages.map((msg) => (
-                <ChatItem
-                  content={msg.content}
-                  currentMember={member}
-                  fileUrl={msg.fileUrl}
-                  id={msg.id}
-                  isDeleted={msg.deleted}
-                  isUpdated={msg.updatedAt !== msg.createdAt}
-                  member={msg.member}
-                  socketQuery={socketQuery}
-                  socketUrl={socketUrl}
-                  timeStamp={format(new Date(msg.createdAt), DATE_FORMAT)}
-                  key={msg.id}
-                />
-              ))}
-            </Fragment>
-          );
-        }
-      )}
+      <div className="flex flex-col-reverse">
+        {data.pages.map(
+          (
+            page: { data: { messages: MessageWithMemberWithProfile[] } },
+            index
+          ) => {
+            if (!page.data) return <></>;
+            return (
+              <Fragment key={index}>
+                {page.data.messages.map((msg) => (
+                  <ChatItem
+                    content={msg.content}
+                    currentMember={member}
+                    fileUrl={msg.fileUrl}
+                    id={msg.id}
+                    isDeleted={msg.deleted}
+                    isUpdated={msg.updatedAt !== msg.createdAt}
+                    member={msg.member}
+                    socketQuery={socketQuery}
+                    socketUrl={socketUrl}
+                    timeStamp={format(new Date(msg.createdAt), DATE_FORMAT)}
+                    key={msg.id}
+                  />
+                ))}
+              </Fragment>
+            );
+          }
+        )}
+      </div>
     </div>
   );
 };

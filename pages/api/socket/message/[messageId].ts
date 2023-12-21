@@ -122,6 +122,13 @@ export default async function handler(
         data: {
           content: content,
         },
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
+        },
       });
     } else {
       finalMessage = await prismadb.message.update({
@@ -131,6 +138,13 @@ export default async function handler(
         data: {
           content: "This message has been deleted",
           deleted: true,
+        },
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
         },
       });
     }

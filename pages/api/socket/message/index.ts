@@ -77,6 +77,13 @@ export default async function handler(
         memberId: member.id,
         channelId: channelId as string,
       },
+      include: {
+        member: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     });
     const socketKey = `channel:${channelId}:message`;
 

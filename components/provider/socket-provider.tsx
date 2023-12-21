@@ -26,17 +26,19 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
 
   useEffect(() => {
-    const newSocket = ClientIO(process.env.NEXT_PUBLIC_SITE_URL!, {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const newSocket = new (ClientIO as any)(siteUrl, {
       addTrailingSlash: false,
       path: "/api/socket/io",
     });
+
     setSocket(newSocket);
 
-    newSocket.on("connected", () => {
+    newSocket.on("connect", () => {
       setIsConnected(true);
     });
 
-    newSocket.on("disconnected", () => {
+    newSocket.on("disconnect", () => {
       setIsConnected(false);
     });
 
