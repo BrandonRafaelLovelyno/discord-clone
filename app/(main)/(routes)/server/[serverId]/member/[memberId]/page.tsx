@@ -19,6 +19,7 @@ const MemberPage: React.FC<MemberPageProps> = ({ params }) => {
     if (conversationLoading || !conversationData) {
       return <ThreeCircleLoader size={100} />;
     } else {
+      console.log(conversationData.data);
       return (
         <div className="flex flex-col w-full h-full">
           <ChatHeader

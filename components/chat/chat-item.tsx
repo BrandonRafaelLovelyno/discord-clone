@@ -19,6 +19,8 @@ import MotionDivUp from "../animation/motion-div-up";
 import { toast } from "react-hot-toast";
 import qs from "query-string";
 import useModal from "@/hooks/useModal";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 interface KeyboardEvent {
   key: string;
@@ -107,6 +109,15 @@ const ChatItem: React.FC<ChatItemProps> = ({
     }
   };
 
+  const params = useParams();
+  const router = useRouter();
+
+  const onMemberClick = () => {
+    if (currentMember.id !== member.id) {
+      router.push(`/server/${params?.serverId}/member/${member.id}`);
+    }
+  };
+
   const modal = useModal();
 
   const fileType = content.split(".").pop();
@@ -119,12 +130,18 @@ const ChatItem: React.FC<ChatItemProps> = ({
   const canEditMesssage = isOwner && !isDeleted;
   return (
     <div className="relative flex p-4 gap-x-3 group hover:bg-black/5">
-      <div className="transition cursor-pointer hover:drop-shadow-md">
+      <div
+        className="transition cursor-pointer hover:drop-shadow-md"
+        onClick={onMemberClick}
+      >
         <ProfileAvatar imageUrl={member.profile.imageUrl} className="" />
       </div>
       <div className="flex flex-col w-full">
         <div className="flex flex-row items-center gap-x-2">
-          <p className="text-sm font-semibold cursor-pointer hover:underline">
+          <p
+            className="text-sm font-semibold cursor-pointer hover:underline"
+            onClick={onMemberClick}
+          >
             {member.profile.name}
           </p>
 

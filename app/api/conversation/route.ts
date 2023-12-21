@@ -33,7 +33,7 @@ export async function GET(req: Request) {
     }
     const conversation = await getOrCreateConversation(ourMember.id, memberId);
     const otherMember =
-      session.user.profileId == conversation.memberOneId
+      ourMember.id == conversation.memberOneId
         ? conversation.memberTwo
         : conversation.memberOne;
     return NextResponse.json({
