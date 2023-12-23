@@ -100,7 +100,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                     socketQuery={socketQuery}
                     socketUrl={socketUrl}
                     timeStamp={format(new Date(msg.createdAt), DATE_FORMAT)}
-                    key={msg.id}
+                    key={`${msg.id} ${msg.updatedAt}`}
                   />
                 ))}
               </Fragment>

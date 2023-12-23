@@ -27,7 +27,7 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    const newSocket = new (ClientIO as any)(siteUrl, {
+    const newSocket: Socket = new (ClientIO as any)(siteUrl, {
       addTrailingSlash: false,
       path: "/api/socket/io",
     });
