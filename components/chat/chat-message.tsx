@@ -92,8 +92,22 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       className="flex flex-col w-full h-full py-4 overflow-y-auto"
       ref={topRef}
     >
-      <div className="flex-1" />
-      <ChatWelcome name={name} type={type} />
+      {!hasNextPage && <div className="flex-1" />}
+      {!hasNextPage && <ChatWelcome name={name} type={type} />}
+      {hasNextPage && (
+        <div className="flex justify-center">
+          {isFetchingNextPage ? (
+            <Loader2 className="w-6 h-6 my-4 text-zinc-500 animate-spin" />
+          ) : (
+            <button
+              onClick={() => fetchNextPage()}
+              className="my-4 text-xs transition text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
+            >
+              Load previous messages
+            </button>
+          )}
+        </div>
+      )}
       <div className="flex flex-col-reverse">
         {data.pages.map(
           (
