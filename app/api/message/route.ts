@@ -3,7 +3,7 @@ import prismadb from "@/lib/orm/prismadb";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-const MESSAGE_BATCH = 50;
+const MESSAGE_BATCH = 10;
 
 export async function GET(req: NextRequest) {
   try {

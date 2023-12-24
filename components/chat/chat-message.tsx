@@ -2,13 +2,14 @@
 
 import { format } from "date-fns";
 import { Member } from "@prisma/client";
-import React, { Fragment } from "react";
+import React, { ElementRef, Fragment, useRef } from "react";
 import ChatWelcome from "./chat-welcome";
 import useChatQuery from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { MessageWithMemberWithProfile } from "@/lib/types/collection";
 import ChatItem from "./chat-item";
 import useChatSocket from "@/hooks/use-chat-socket";
+import useChatScroll from "@/hooks/use-chat-scroll";
 
 interface ChatMessageProps {
   apiUrl: string;
@@ -53,6 +54,17 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 
   useChatSocket({ addKey, updateKey, queryKey });
 
+  const topRef = useRef<ElementRef<"div">>(null);
+  const bottomRef = useRef<ElementRef<"div">>(null);
+
+  useChatScroll({
+    hasNextPage,
+    topRef,
+    bottomRef,
+    loadMore: fetchNextPage,
+    count: data?.pages[0].data.messages.length ?? 0,
+  });
+
   if (status == "pending") {
     return (
       <div className="flex flex-col items-center justify-center flex-1 w-full h-full">
@@ -76,7 +88,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   }
 
   return (
-    <div className="flex flex-col w-full h-full py-4 ">
+    <div
+      className="flex flex-col w-full h-full py-4 overflow-y-auto"
+      ref={topRef}
+    >
       <div className="flex-1" />
       <ChatWelcome name={name} type={type} />
       <div className="flex flex-col-reverse">
@@ -108,6 +123,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           }
         )}
       </div>
+      <div ref={bottomRef} />
     </div>
   );
 };
