@@ -55,6 +55,13 @@ export default async function handler(
           fileUrl: fileUrl as string,
           content: content as string,
         },
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
+        },
       });
     } else {
       finalDirectMessage = await prismadb.directMessage.update({
@@ -65,10 +72,17 @@ export default async function handler(
           deleted: true,
           content: "The message has been deleted",
         },
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
+        },
       });
     }
 
-    const updateKey = `conversation:${conversationId}:directMessage:update`;
+    const updateKey = `conversation:${conversationId}:direct-message:update`;
 
     res.socket.server.io.emit(updateKey, finalDirectMessage);
     return res.status(200).json({

@@ -7,7 +7,7 @@ const DIRECT_MESSAGE_BATCH = 10;
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
-    const conversationId = url.searchParams.get("conversationID");
+    const conversationId = url.searchParams.get("conversationId");
     const cursor = url.searchParams.get("cursor");
     if (!conversationId || !cursor) {
       throw new Error("Missing fields");
@@ -22,7 +22,17 @@ export async function GET(req: Request) {
         cursor: {
           id: cursor,
         },
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
+        },
         skip: 0,
+        orderBy: {
+          createdAt: "desc",
+        },
       });
     } else {
       direct_messages = await prismadb.directMessage.findMany({
@@ -31,8 +41,15 @@ export async function GET(req: Request) {
         },
         take: DIRECT_MESSAGE_BATCH,
         skip: 1,
-        cursor: {
-          id: cursor,
+        include: {
+          member: {
+            include: {
+              profile: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       });
     }
@@ -44,7 +61,7 @@ export async function GET(req: Request) {
       success: true,
       message: "",
       data: {
-        directMessages: direct_messages,
+        messages: direct_messages,
         nextCursor: nextCursor,
       },
     });

@@ -36,7 +36,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
             type="channel"
             imageUrl=""
           />
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-hidden">
             <ChatMessage
               paramKey="channelId"
               apiUrl="/api/message"

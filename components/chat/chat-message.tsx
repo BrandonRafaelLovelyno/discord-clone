@@ -34,9 +34,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   member,
   name,
 }) => {
-  const queryKey = `channel:${chatId}`;
-  const addKey = `channel:${chatId}:message`;
-  const updateKey = `channel:${chatId}:message:update`;
+  const queryKey = `${type}:${chatId}`;
+  const addKey = `${type}:${chatId}:${
+    type == "channel" ? "message" : "direct-message"
+  }`;
+  const updateKey = `${type}:${chatId}:${
+    type == "channel" ? "message" : "direct-message"
+  }:update`;
   const {
     data,
     error,
@@ -56,6 +60,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 
   const topRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
+
+  console.log(data?.pages);
 
   useChatScroll({
     hasNextPage,
@@ -89,7 +95,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 
   return (
     <div
-      className="flex flex-col w-full h-full py-4 overflow-y-auto"
+      className="flex flex-col w-full h-full pt-4 overflow-y-auto"
       ref={topRef}
     >
       {!hasNextPage && <div className="flex-1" />}

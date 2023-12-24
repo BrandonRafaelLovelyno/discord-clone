@@ -51,9 +51,16 @@ export default async function handler(
         fileUrl: fileUrl as string,
         memberId: currentMember.id,
       },
+      include: {
+        member: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     });
 
-    const socketKey = `conversation:${conversationId}:directMessage`;
+    const socketKey = `conversation:${conversationId}:direct-message`;
 
     res.socket.server.io.emit(socketKey, newDirectMessage);
     return res.status(200).json({
