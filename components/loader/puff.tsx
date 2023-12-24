@@ -12,7 +12,7 @@ const PuffLoader: React.FC<PuffLoaderProps> = ({ width, height }) => {
       height={`${height}`}
       width={`${width}`}
       radius={1}
-      color="#6600ff"
+      color="#71717a"
       ariaLabel="puff-loading"
       wrapperStyle={{}}
       wrapperClass=""

@@ -11,7 +11,7 @@ const LineWaveLoader: React.FC<LineWaveLoaderProps> = ({ width, height }) => {
     <LineWave
       height={height.toString()}
       width={width.toString()}
-      color="#9966ff"
+      color="#71717a"
       ariaLabel="LineWaveLoader"
       wrapperStyle={{}}
       wrapperClass=""

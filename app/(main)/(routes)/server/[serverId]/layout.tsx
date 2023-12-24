@@ -27,7 +27,7 @@ const ServerLayout: React.FC<ServerLayoutProps> = ({ children, params }) => {
     }
   }, [serverData, serverLoading]);
   return (
-    <div className="flex w-full h-full">
+    <div className="flex w-full h-full bg-white dark:bg-[#313338]">
       <MotionDivUp key="server-sidebar" className="w-64 h-full max-md:hidden">
         <ServerSideBar serverId={params.serverId} />
       </MotionDivUp>

@@ -29,7 +29,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
     } else {
       const channelName: string = channelData.data.channel.name.toLowerCase();
       return (
-        <div className="flex flex-col w-full h-full  bg-white dark:bg-[#313338]">
+        <div className="flex flex-col w-full h-full">
           <ChatHeader
             name={channelName}
             serverId={params.serverId}

@@ -17,7 +17,7 @@ const ThreeCircleLoader: React.FC<ThreeCircleLoaderProps> = ({ size }) => {
       <ThreeCircles
         height={`${size}`}
         width={`${size}`}
-        color="#6600ff"
+        color="#71717a"
         wrapperStyle={{}}
         wrapperClass=""
         visible={true}
