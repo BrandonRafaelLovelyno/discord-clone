@@ -10,7 +10,8 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const channelId = url.searchParams.get("channelId");
     const cursor = url.searchParams.get("cursor");
-    if (!channelId || !cursor) {
+    const serverId = url.searchParams.get("serverId");
+    if (!channelId || !cursor || !serverId) {
       throw new Error("Missing fields");
     }
     if (!cursor) {

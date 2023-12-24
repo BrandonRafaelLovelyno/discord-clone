@@ -18,7 +18,7 @@ interface ChatMessageProps {
   type: "conversation" | "channel";
   name: string;
   paramKey: "channelId" | "conversationId";
-  socketQuery: { serverId: string; channelId: string };
+  socketQuery: Record<string, any>;
   member: Member;
 }
 

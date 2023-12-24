@@ -1,5 +1,5 @@
 import fetcher from "@/lib/fetcher";
-import { S_ProfileResponse } from "@/lib/types/api response/profile-response";
+import { S_ProfileResponse } from "@/lib/types/api-response";
 import useSwr from "swr";
 
 const useProfile = () => {

@@ -9,6 +9,11 @@ export async function PATCH(
 ) {
   try {
     const { content } = await req.json();
+    const url = new URL(req.url);
+    const channelId = url.searchParams.get("channelId");
+    if (!channelId) {
+      throw new Error("Missing fields");
+    }
     const session = await getServerSession(options);
     if (!session) {
       throw new Error("Unauthorized");
@@ -16,6 +21,7 @@ export async function PATCH(
     const updatedMessage = await prismadb.message.update({
       where: {
         id: params.messageId,
+        channelId,
         member: {
           profileId: session.user.profileId,
         },

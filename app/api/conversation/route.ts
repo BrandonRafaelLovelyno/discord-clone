@@ -36,10 +36,11 @@ export async function GET(req: Request) {
       ourMember.id == conversation.memberOneId
         ? conversation.memberTwo
         : conversation.memberOne;
+    const currentMember = ourMember;
     return NextResponse.json({
       success: true,
       message: "",
-      data: { conversation, otherMember },
+      data: { conversation, otherMember, currentMember },
     });
   } catch (err) {
     return NextResponse.json(

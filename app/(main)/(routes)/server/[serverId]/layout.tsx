@@ -2,10 +2,7 @@
 import MotionDivUp from "@/components/animation/motion-div-up";
 import ServerSideBar from "@/components/server/server-sidebar";
 import useServer from "@/hooks/fetching/server/useServer";
-import {
-  S_ServerResponse,
-  S_ServerWithRoleResponse,
-} from "@/lib/types/api-response";
+import { S_ServerWithRoleResponse } from "@/lib/types/api-response";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 

@@ -51,10 +51,12 @@ export interface S_ChannelResponseWithCurrentMemberResponse
   };
 }
 
-export interface S_ConversationWithOtherResponse extends APIResponse {
+export interface S_ConversationWithOtherWithCurrentResponse
+  extends APIResponse {
   data: {
     conversation: ConversationWithMemberWithProfile;
     otherMember: MemberWithProfile;
+    currentMember: MemberWithProfile;
   };
 }
 
