@@ -4,7 +4,9 @@ import ChatHeader from "@/components/chat/chat-header";
 import ChatInput from "@/components/chat/chat-input";
 import ChatMessage from "@/components/chat/chat-message";
 import ThreeCircleLoader from "@/components/loader/three-circle";
+import MediaRoom from "@/components/media-room";
 import useChannel from "@/hooks/fetching/channel/useChannel";
+import { ChannelType } from "@prisma/client";
 import React, { useMemo } from "react";
 
 interface ChannelPageProps {
@@ -36,32 +38,56 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
             type="channel"
             imageUrl=""
           />
-          <div className="flex-1 overflow-hidden">
-            <ChatMessage
-              paramKey="channelId"
-              apiUrl="/api/message"
-              chatId={params.channelId}
-              socketQuery={{
-                channelId: params.channelId,
-                serverId: params.serverId,
-              }}
-              member={channelData.data.currentMember}
-              socketUrl="/api/socket/message"
-              type="channel"
-              name={channelName}
-            />
-          </div>
-          <div>
-            <ChatInput
-              apiUrl="/api/socket/message"
-              type="channel"
-              name={channelName.toLowerCase()}
-              query={{
-                serverId: params.serverId,
-                channelId: params.channelId,
-              }}
-            />
-          </div>
+          {channelData.data.channel.type == ChannelType.TEXT && (
+            <>
+              <div className="flex-1 overflow-hidden">
+                <ChatMessage
+                  paramKey="channelId"
+                  apiUrl="/api/message"
+                  chatId={params.channelId}
+                  socketQuery={{
+                    channelId: params.channelId,
+                    serverId: params.serverId,
+                  }}
+                  member={channelData.data.currentMember}
+                  socketUrl="/api/socket/message"
+                  type="channel"
+                  name={channelName}
+                />
+              </div>
+              <div>
+                <ChatInput
+                  apiUrl="/api/socket/message"
+                  type="channel"
+                  name={channelName.toLowerCase()}
+                  query={{
+                    serverId: params.serverId,
+                    channelId: params.channelId,
+                  }}
+                />
+              </div>
+            </>
+          )}
+          {channelData.data.channel.type == ChannelType.AUDIO && (
+            <div className="flex-1">
+              <MediaRoom
+                username={channelData.data.currentMember.profile.name}
+                audio={true}
+                chatId={channelData.data.channel.id}
+                video={false}
+              />
+            </div>
+          )}
+          {channelData.data.channel.type == ChannelType.VIDEO && (
+            <div className="flex-1">
+              <MediaRoom
+                username={channelData.data.currentMember.profile.name}
+                audio={false}
+                chatId={channelData.data.channel.id}
+                video={true}
+              />
+            </div>
+          )}
         </div>
       );
     }

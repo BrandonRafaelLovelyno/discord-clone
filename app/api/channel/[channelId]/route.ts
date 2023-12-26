@@ -101,6 +101,9 @@ export async function GET(
         profileId: session.user.profileId,
         serverId,
       },
+      include: {
+        profile: true,
+      },
     });
     if (!member) {
       throw new Error("Unauthorized");

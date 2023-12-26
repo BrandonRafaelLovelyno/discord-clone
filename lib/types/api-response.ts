@@ -47,7 +47,7 @@ export interface S_ChannelResponseWithCurrentMemberResponse
   extends APIResponse {
   data: {
     channel: Channel;
-    currentMember: Member;
+    currentMember: MemberWithProfile;
   };
 }
 
