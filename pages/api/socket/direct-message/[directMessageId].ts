@@ -22,10 +22,10 @@ export default async function handler(
         .status(402)
         .json({ success: false, message: "Unauthorized", data: {} });
     }
-    const { conversationId, directMessageId } = req.query;
+    const { directMessageId } = req.query;
     const { content, fileUrl } = req.body;
 
-    if (!content || !conversationId) {
+    if (!content || !directMessageId) {
       return res.status(400).json({
         success: false,
         message: "Missing fields",
@@ -50,6 +50,7 @@ export default async function handler(
       finalDirectMessage = await prismadb.directMessage.update({
         where: {
           id: directMessageId as string,
+          memberId: currentMember.id,
         },
         data: {
           fileUrl: fileUrl as string,
@@ -67,6 +68,7 @@ export default async function handler(
       finalDirectMessage = await prismadb.directMessage.update({
         where: {
           id: directMessageId as string,
+          memberId: currentMember.id,
         },
         data: {
           deleted: true,
@@ -82,7 +84,7 @@ export default async function handler(
       });
     }
 
-    const updateKey = `conversation:${conversationId}:direct-message:update`;
+    const updateKey = `conversation:${finalDirectMessage.conversationId}:direct-message:update`;
 
     res.socket.server.io.emit(updateKey, finalDirectMessage);
     return res.status(200).json({

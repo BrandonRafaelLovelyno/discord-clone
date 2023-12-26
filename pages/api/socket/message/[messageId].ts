@@ -18,9 +18,8 @@ export default async function handler(
   }
   try {
     const { content } = req.body;
-    const { serverId, channelId, messageId } = req.query;
-
-    if (!serverId || !channelId || !messageId) {
+    const { serverId, messageId } = req.query;
+    if (!serverId || !messageId) {
       return res.status(400).json({
         success: false,
         message: "Missing queries",
@@ -52,11 +51,6 @@ export default async function handler(
             profileId: session.user.profileId,
           },
         },
-        channels: {
-          some: {
-            id: channelId as string,
-          },
-        },
       },
       include: {
         members: true,
@@ -84,7 +78,6 @@ export default async function handler(
     const message = await prismadb.message.findUnique({
       where: {
         id: messageId as string,
-        channelId: channelId as string,
       },
       include: {
         member: true,
@@ -149,7 +142,7 @@ export default async function handler(
       });
     }
 
-    const updateKey = `channel:${channelId}:message:update`;
+    const updateKey = `channel:${finalMessage.channelId}:message:update`;
 
     res.socket.server.io.emit(updateKey, finalMessage);
 

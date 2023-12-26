@@ -96,6 +96,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
     try {
       const url = qs.stringifyUrl({
         url: `${socketUrl}/${id}`,
+        query: socketQuery,
       });
       const res = await axios.patch(url, values);
       if (!res.data) {
