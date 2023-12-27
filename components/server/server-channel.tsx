@@ -26,7 +26,7 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
   const modal = useModal();
   const params = useParams();
   const isChannel = useMemo(() => {
-    if (params.serverId == channel.id) {
+    if (params?.serverId == channel.id) {
       return true;
     }
     return false;
@@ -35,7 +35,7 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
   return (
     <button
       className={twMerge(
-        "w-full py-1 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 px-3 group duration-150 flex",
+        "w-full py-1 hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 px-3 group duration-150 flex items-center",
         isChannel && "bg-zinc-700/20 dark:bg-zinc-700"
       )}
       onClick={() => router.push(`/server/${server.id}/channel/${channel.id}`)}

@@ -61,10 +61,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const topRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
 
-  console.log(data?.pages);
-
   useChatScroll({
-    hasNextPage,
+    shouldLoadMore: !isFetching && hasNextPage,
     topRef,
     bottomRef,
     loadMore: fetchNextPage,

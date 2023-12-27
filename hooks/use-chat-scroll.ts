@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 interface ChatScrollProps {
   topRef: React.RefObject<HTMLDivElement>;
   bottomRef: React.RefObject<HTMLDivElement>;
-  hasNextPage: boolean;
+  shouldLoadMore: boolean;
   loadMore: () => void;
   count: number;
 }
 
 const useChatScroll = ({
-  hasNextPage,
+  shouldLoadMore,
   topRef,
   bottomRef,
   loadMore,
@@ -20,14 +20,17 @@ const useChatScroll = ({
     const topDiv = topRef.current;
 
     const handleScroll = () => {
-      if (topDiv?.scrollTop == 0 && hasNextPage) {
+      if (topDiv?.scrollTop === 0 && shouldLoadMore) {
+        console.log("loading prev message");
         loadMore();
       }
     };
 
     topDiv?.addEventListener("scroll", handleScroll);
-    return () => topDiv?.removeEventListener("scroll", handleScroll);
-  }, [loadMore, topRef]);
+    return () => {
+      topDiv?.removeEventListener("scroll", handleScroll);
+    };
+  }, [loadMore, topRef, shouldLoadMore]);
 
   useEffect(() => {
     const bottomDiv = bottomRef.current;
@@ -46,14 +49,7 @@ const useChatScroll = ({
       const distanceFromBottom =
         topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight;
 
-      console.log(
-        distanceFromBottom,
-        topDiv.scrollHeight,
-        topDiv.scrollTop,
-        topDiv.clientHeight
-      );
-
-      return distanceFromBottom <= 100;
+      return distanceFromBottom <= 200;
     };
 
     if (handleAutoScroll()) {

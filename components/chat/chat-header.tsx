@@ -33,7 +33,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       <p className="text-lg font-bold text-white lowercase">{name}</p>
       <div className="ml-auto">
         <div className="flex items-center gap-x-3">
-          <ChatVideoButton />
+          {type == "conversation" && <ChatVideoButton />}
+
           <SocketBadge />
         </div>
       </div>
