@@ -6,6 +6,8 @@ import ChatMessage from "@/components/chat/chat-message";
 import ThreeCircleLoader from "@/components/loader/three-circle";
 import useConversation from "@/hooks/fetching/conversation/useConversation";
 import React, { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import MediaRoom from "@/components/media-room";
 
 interface MemberPageProps {
   params: {
@@ -15,45 +17,58 @@ interface MemberPageProps {
 }
 
 const MemberPage: React.FC<MemberPageProps> = ({ params }) => {
+  const searchParams = useSearchParams();
+  const isVideo = searchParams?.get("video");
   const { data: conversationData, isLoading: conversationLoading } =
     useConversation(params.memberId, params.serverId);
   const body: React.ReactNode = useMemo(() => {
     if (conversationLoading || !conversationData) {
       return <ThreeCircleLoader size={100} />;
     } else {
-      return (
-        <div className="flex flex-col w-full h-full">
-          <ChatHeader
-            name={conversationData.data.otherMember.profile.name}
-            serverId={params.serverId}
-            type="conversation"
-            imageUrl={conversationData.data.otherMember.profile.imageUrl}
-          />
-          <div className="flex-1 overflow-hidden">
-            <ChatMessage
-              apiUrl={`/api/direct-message`}
-              chatId={conversationData.data.conversation.id}
-              member={conversationData.data.currentMember}
+      if (!isVideo) {
+        return (
+          <div className="flex flex-col w-full h-full">
+            <ChatHeader
               name={conversationData.data.otherMember.profile.name}
-              paramKey={"conversationId"}
-              socketQuery={{
-                conversationId: conversationData.data.conversation.id,
-              }}
-              socketUrl="/api/socket/direct-message"
+              serverId={params.serverId}
               type="conversation"
-              key={`${params.serverId}${params.memberId}`}
+              imageUrl={conversationData.data.otherMember.profile.imageUrl}
+            />
+            <div className="flex-1 overflow-hidden">
+              <ChatMessage
+                apiUrl={`/api/direct-message`}
+                chatId={conversationData.data.conversation.id}
+                member={conversationData.data.currentMember}
+                name={conversationData.data.otherMember.profile.name}
+                paramKey={"conversationId"}
+                socketQuery={{
+                  conversationId: conversationData.data.conversation.id,
+                }}
+                socketUrl="/api/socket/direct-message"
+                type="conversation"
+                key={`${params.serverId}${params.memberId}`}
+              />
+            </div>
+            <ChatInput
+              apiUrl={`/api/socket/direct-message`}
+              name={conversationData.data.otherMember.profile.name}
+              query={{ conversationId: conversationData.data.conversation.id }}
+              type="conversation"
             />
           </div>
-          <ChatInput
-            apiUrl={`/api/socket/direct-message`}
-            name={conversationData.data.otherMember.profile.name}
-            query={{ conversationId: conversationData.data.conversation.id }}
-            type="conversation"
+        );
+      } else {
+        return (
+          <MediaRoom
+            audio={false}
+            chatId={conversationData.data.conversation.id}
+            username={conversationData.data.otherMember.profile.name}
+            video
           />
-        </div>
-      );
+        );
+      }
     }
-  }, [conversationData, conversationLoading]);
+  }, [conversationData, conversationLoading, isVideo]);
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
       {body}

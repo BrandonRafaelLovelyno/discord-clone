@@ -4,6 +4,7 @@ import MobileToggle from "../mobile-toggle";
 import MotionDivDown from "../animation/motion-div-down";
 import ProfileAvatar from "../profile-avatar";
 import SocketBadge from "../socket-badge";
+import ChatVideoButton from "./chat-video-button";
 
 interface ChatHeaderProps {
   type: "channel" | "conversation";
@@ -31,7 +32,10 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       )}
       <p className="text-lg font-bold text-white lowercase">{name}</p>
       <div className="ml-auto">
-        <SocketBadge />
+        <div className="flex items-center gap-x-3">
+          <ChatVideoButton />
+          <SocketBadge />
+        </div>
       </div>
     </MotionDivDown>
   );
