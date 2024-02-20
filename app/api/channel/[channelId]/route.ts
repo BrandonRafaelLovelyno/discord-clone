@@ -124,3 +124,37 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { channelId: string } }
+) {
+  try {
+    if (!params.channelId) {
+      throw new Error("Missing fields");
+    }
+    const session = await getServerSession(options);
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+    const deletedChannel = await prismadb.channel.delete({
+      where: {
+        id: params.channelId,
+      },
+    });
+    if (!deletedChannel) {
+      throw new Error("Invalid serverId");
+    }
+    return NextResponse.json({
+      success: true,
+      message: "",
+      data: {},
+    });
+  } catch (err) {
+    return NextResponse.json({
+      success: false,
+      data: {},
+      message: (err as Error).message,
+    });
+  }
+}
