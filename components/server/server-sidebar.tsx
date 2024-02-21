@@ -176,7 +176,11 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
             {usedServer.members.map((m) => {
               if (m.profileId != session.user.profileId) {
                 return (
-                  <MotionDivUp delay={Math.random() + 1} className="mb-2">
+                  <MotionDivUp
+                    delay={Math.random() + 1}
+                    className="mb-2"
+                    key={m.profileId}
+                  >
                     <ServerMember member={m} server={usedServer} key={m.id} />
                   </MotionDivUp>
                 );

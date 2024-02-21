@@ -56,7 +56,7 @@ const useChatSocket = ({ addKey, updateKey, queryKey }: ChatSocketProps) => {
               pages: [
                 {
                   data: {
-                    message: [message],
+                    messages: [message],
                   },
                 },
               ],

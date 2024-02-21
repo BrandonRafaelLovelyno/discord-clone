@@ -91,7 +91,7 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
         </div>
       );
     }
-  }, [channelData, channelLoading]);
+  }, [channelData, channelLoading, params]);
   return <>{body}</>;
 };
 

@@ -80,7 +80,7 @@ const ChatItem: React.FC<ChatItemProps> = ({
     form.reset({
       content: content,
     });
-  }, [content]);
+  }, [content, form]);
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {

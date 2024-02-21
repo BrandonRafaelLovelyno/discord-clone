@@ -43,7 +43,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   }:update`;
   const {
     data,
-    error,
     fetchNextPage,
     hasNextPage,
     isFetching,
