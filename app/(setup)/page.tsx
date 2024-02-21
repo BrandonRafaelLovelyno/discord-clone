@@ -33,7 +33,7 @@ export default function Home() {
             />
             <div
               className="relative flex flex-row items-center justify-between px-10 py-4 font-bold text-white bg-purple-900 rounded-lg cursor-pointer gap-x-10 bg-opacity-40"
-              onClick={() => signIn("google")}
+              onClick={() => signIn("google", {}, { prompt: "login" })}
             >
               <FaGoogle size={20} />
               <p>Login with google account</p>
