@@ -59,8 +59,8 @@ const EditServerModal = () => {
         if (!res.data.success) {
           throw new Error(res.data.message);
         }
-        mutate(`/api/server`);
-        mutate(`/api/server/${modal.data.server?.id}`);
+        await mutate(`/api/server`);
+        await mutate(`/api/server/${modal.data.server?.id}`);
         modal.onOpen("editServer", { server: res.data.data });
         toast.success("Server updated");
         form.reset();
@@ -69,14 +69,14 @@ const EditServerModal = () => {
         toast.error((err as Error).message);
       }
     },
-    [session?.user, modal.data.server]
+    [modal, form, mutate]
   );
   useEffect(() => {
     if (modal.data.server) {
       form.setValue("name", modal.data.server.name);
       form.setValue("imageUrl", modal.data.server.imageUrl);
     }
-  }, [modal.data.server]);
+  }, [modal, form]);
   return (
     <Dialog
       open={modal.isOpen && modal.type == "editServer"}

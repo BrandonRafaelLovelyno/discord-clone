@@ -151,7 +151,11 @@ export async function PATCH(
               profile: true,
             },
           },
-          members: true,
+          members: {
+            include: {
+              profile: true,
+            },
+          },
         },
       });
     }

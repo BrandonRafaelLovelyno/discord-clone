@@ -8,7 +8,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import useModal from "@/hooks/useModal";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import {
@@ -51,49 +51,52 @@ const ServerMemberModal = () => {
   const modal = useModal();
   const { mutate } = useSWRConfig();
   const [loadingId, setLoadingId] = useState<string>("");
-  const onKick = async (memberId: string, name: string) => {
-    try {
-      setLoadingId(memberId);
-      const res = await axios.post<S_ServerWithChannelWithProfileResponse>(
-        `/api/member/kick/${modal.data.server?.id}?memberId=${memberId}`
-      );
-      if (!res.data.success) {
-        throw new Error(res.data.message);
-      }
-      mutate(`/api/server/${modal.data.server?.id}`);
-      modal.onOpen("members", { server: res.data.data });
-      toast.success(`You have kicked ${name}`);
-    } catch (err) {
-      toast.error((err as Error).message);
-    } finally {
-      setLoadingId("");
-    }
-  };
-  const onChangeRole = async (
-    memberId: string,
-    role: MemberRole,
-    name: string
-  ) => {
-    try {
-      setLoadingId(memberId);
-      const res = await axios.patch<S_ServerWithChannelWithProfileResponse>(
-        `/api/member/role/${modal.data.server?.id}?memberId=${memberId}`,
-        {
-          role,
+  const onKick = useCallback(
+    async (memberId: string, name: string) => {
+      try {
+        setLoadingId(memberId);
+        const res = await axios.post<S_ServerWithChannelWithProfileResponse>(
+          `/api/member/kick/${modal.data.server?.id}?memberId=${memberId}`
+        );
+        if (!res.data.success) {
+          throw new Error(res.data.message);
         }
-      );
-      if (!res.data.success) {
-        throw new Error(res.data.message);
+        mutate(`/api/server/${modal.data.server?.id}`);
+        modal.onOpen("members", { server: res.data.data });
+        toast.success(`You have kicked ${name}`);
+      } catch (err) {
+        toast.error((err as Error).message);
+      } finally {
+        setLoadingId("");
       }
-      mutate(`/api/server/${modal.data.server?.id}`);
-      modal.onOpen("members", { server: res.data.data });
-      toast.success(`You have changed ${name}'s role`);
-    } catch (err) {
-      toast.error((err as Error).message);
-    } finally {
-      setLoadingId("");
-    }
-  };
+    },
+    [modal, mutate]
+  );
+
+  const onChangeRole = useCallback(
+    async (memberId: string, role: MemberRole, name: string) => {
+      try {
+        setLoadingId(memberId);
+        const res = await axios.patch<S_ServerWithChannelWithProfileResponse>(
+          `/api/member/role/${modal.data.server?.id}?memberId=${memberId}`,
+          {
+            role,
+          }
+        );
+        if (!res.data.success) {
+          throw new Error(res.data.message);
+        }
+        mutate(`/api/server/${modal.data.server?.id}`);
+        modal.onOpen("members", { server: res.data.data });
+        toast.success(`You have changed ${name}'s role`);
+      } catch (err) {
+        toast.error((err as Error).message);
+      } finally {
+        setLoadingId("");
+      }
+    },
+    [modal, mutate]
+  );
   const [description, body] = useMemo(() => {
     if (!modal.data.server) {
       return [null, null];
@@ -176,7 +179,7 @@ const ServerMemberModal = () => {
     );
     const desc = <p>{modal.data.server.members.length} members</p>;
     return [desc, bod];
-  }, [modal.data.server, loadingId]);
+  }, [modal.data.server, loadingId, onChangeRole, onKick]);
   return (
     <Dialog
       open={modal.isOpen && modal.type == "members"}
