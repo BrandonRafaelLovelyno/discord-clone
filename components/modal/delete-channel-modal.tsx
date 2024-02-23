@@ -27,12 +27,14 @@ import useModal from "@/hooks/useModal";
 import MotionDivUp from "../animation/motion-div-up";
 import { useSWRConfig } from "swr";
 import { S_ServerResponse } from "@/lib/types/api-response";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Type the channel name" }),
 });
 
 const DeleteChannelModal = () => {
+  const router = useRouter();
   const { mutate } = useSWRConfig();
   const form = useForm({
     defaultValues: {
@@ -56,9 +58,10 @@ const DeleteChannelModal = () => {
         throw new Error(res.data.message);
       }
       toast.success(`You have deleted the ${modal.data.channel?.name} channel`);
-      await mutate("/api/channel");
       form.reset();
       modal.onClose();
+      await mutate("/api/channel");
+      router.replace("/");
     } catch (err) {
       toast.error((err as Error).message);
     }

@@ -7,7 +7,8 @@ import ThreeCircleLoader from "@/components/loader/three-circle";
 import MediaRoom from "@/components/media-room";
 import useChannel from "@/hooks/fetching/channel/useChannel";
 import { ChannelType } from "@prisma/client";
-import React, { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useMemo } from "react";
 
 interface ChannelPageProps {
   params: {
@@ -17,10 +18,20 @@ interface ChannelPageProps {
 }
 
 const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
+  const router = useRouter();
   const { data: channelData, isLoading: channelLoading } = useChannel(
     params.channelId,
     params.serverId
   );
+
+  useEffect(() => {
+    if (!channelLoading && !channelData?.data.channel) {
+      setTimeout(() => {
+        router.replace("/");
+      }, 1000);
+    }
+  }, [channelData, router, channelLoading]);
+
   const body: React.ReactNode = useMemo(() => {
     if (!channelData || channelLoading || !channelData.success) {
       return (
@@ -29,6 +40,13 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
         </div>
       );
     } else {
+      if (!channelData.data.channel) {
+        return (
+          <div className="flex flex-col items-center justify-center w-full h-full">
+            <p>Channel not found, redirecting to main page</p>
+          </div>
+        );
+      }
       const channelName: string = channelData.data.channel.name.toLowerCase();
       return (
         <div className="flex flex-col w-full h-full">
