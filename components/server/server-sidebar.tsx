@@ -62,7 +62,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
     } else {
       return (serverData as S_ServerWithRoleResponse).data.role;
     }
-  }, [serverLoading, isValidating, serverData]);
+  }, [serverLoading, serverData]);
   const channelPerType = useMemo(() => {
     if (serverLoading || !usedServer) {
       return [];
@@ -85,7 +85,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
       });
       return [text, audio, video];
     }
-  }, [serverLoading, serverData, usedServer]);
+  }, [serverLoading, usedServer]);
   const body: React.ReactElement = useMemo(() => {
     if (serverLoading || !usedServer || sessionStatus !== "authenticated") {
       return (

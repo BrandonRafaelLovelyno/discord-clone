@@ -64,7 +64,7 @@ const CreateServerModal = () => {
         toast.error((err as Error).message);
       }
     },
-    [modal, mutate]
+    [modal, mutate, form]
   );
 
   const handleClose = () => {

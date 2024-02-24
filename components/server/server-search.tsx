@@ -51,9 +51,9 @@ const ServerSearch: React.FC<ServerSearchProps> = ({ data }) => {
   const onClick = ({ id, type }: { id: string; type: objType }) => {
     setIsOpen(false);
     if (type == "channel") {
-      router.push(`/server/${params.serverId}/channel/${id}`);
+      router.push(`/server/${params?.serverId}/channel/${id}`);
     } else {
-      router.push(`/server/${params.serverId}/conversation/${id}`);
+      router.push(`/server/${params?.serverId}/conversation/${id}`);
     }
   };
   return (
