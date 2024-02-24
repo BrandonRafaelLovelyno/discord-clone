@@ -30,7 +30,7 @@ const ServerChannel: React.FC<ServerChannelProps> = ({
       return true;
     }
     return false;
-  }, [params]);
+  }, [params, channel.id]);
   const router = useRouter();
   return (
     <button

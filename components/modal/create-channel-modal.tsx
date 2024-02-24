@@ -50,7 +50,7 @@ const CreateChannelModal = () => {
   useEffect(() => {
     if (!modal.data.channelType) return;
     form.setValue("type", modal.data.channelType);
-  }, [modal]);
+  }, [modal, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {

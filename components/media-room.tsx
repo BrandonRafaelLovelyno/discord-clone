@@ -31,7 +31,7 @@ const MediaRoom: React.FC<MediaRoomProps> = ({
         console.log(err);
       }
     })();
-  }, [token, chatId]);
+  }, [token, chatId, username]);
 
   if (token === "") {
     return (

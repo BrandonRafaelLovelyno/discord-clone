@@ -38,6 +38,13 @@ const formSchema = z.object({
 const CreateServerModal = () => {
   const { data: session } = useSession();
   const modal = useModal();
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      imageUrl: "",
+    },
+    resolver: zodResolver(formSchema),
+  });
   const { mutate } = useSWRConfig();
   const onSubmit = useCallback(
     async (values: z.infer<typeof formSchema>) => {
@@ -57,15 +64,8 @@ const CreateServerModal = () => {
         toast.error((err as Error).message);
       }
     },
-    [session?.user, modal.data.server]
+    [modal, mutate]
   );
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      imageUrl: "",
-    },
-    resolver: zodResolver(formSchema),
-  });
 
   const handleClose = () => {
     form.reset();

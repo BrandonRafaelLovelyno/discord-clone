@@ -55,7 +55,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
         return undefined;
       }
       return (serverData as S_ServerWithRoleResponse).data.server;
-    }, [serverData, serverLoading, isValidating]);
+    }, [serverData, serverLoading]);
   const role = useMemo(() => {
     if (serverLoading || !serverData?.data) {
       return null;
@@ -85,7 +85,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
       });
       return [text, audio, video];
     }
-  }, [serverLoading, serverData]);
+  }, [serverLoading, serverData, usedServer]);
   const body: React.ReactElement = useMemo(() => {
     if (serverLoading || !usedServer || sessionStatus !== "authenticated") {
       return (
@@ -190,15 +190,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
         </MotionDivUp>
       );
     }
-  }, [
-    serverLoading,
-    serverData,
-    isValidating,
-    channelPerType,
-    role,
-    session,
-    sessionStatus,
-  ]);
+  }, [serverLoading, channelPerType, role, session, sessionStatus, usedServer]);
   return (
     <div className="dark:bg-[#2B2D31] bg-[#F2F3F5] h-full w-full flex flex-col justify-center items-center">
       {body}

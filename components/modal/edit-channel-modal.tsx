@@ -58,7 +58,7 @@ const EditChannelModal = () => {
       form.setValue("name", modal.data.channel.name);
       form.setValue("type", modal.data.channel.type);
     }
-  }, [modal]);
+  }, [modal, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {

@@ -84,7 +84,13 @@ const MemberPage: React.FC<MemberPageProps> = ({ params }) => {
         );
       }
     }
-  }, [conversationData, conversationLoading, isVideo]);
+  }, [
+    conversationData,
+    conversationLoading,
+    isVideo,
+    params.memberId,
+    params.serverId,
+  ]);
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
       {body}

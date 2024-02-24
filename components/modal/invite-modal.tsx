@@ -25,7 +25,7 @@ const InviteModal = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const inviteUrl = useMemo(() => {
     return `${origin}/invite/${modal.data.server?.inviteCode}`;
-  }, [modal.data]);
+  }, [modal.data, origin]);
   const handleClose = () => {
     modal.onClose();
   };

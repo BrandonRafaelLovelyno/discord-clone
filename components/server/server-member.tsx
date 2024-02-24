@@ -17,11 +17,11 @@ const ServerMember: React.FC<ServerMemberProps> = ({ member, server }) => {
   const params = useParams();
   const router = useRouter();
   const isMember = useMemo(() => {
-    if (params.memberId !== member.id) {
+    if (params && params.memberId && params.memberId !== member.id) {
       return false;
     }
     return true;
-  }, [params]);
+  }, [params, member.id]);
   const onClick = () => {
     router.push(`/server/${server.id}/member/${member.id}`);
   };

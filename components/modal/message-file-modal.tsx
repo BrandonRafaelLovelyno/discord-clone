@@ -61,7 +61,7 @@ const MessageFileModal = () => {
         toast.error((err as Error).message);
       }
     },
-    [modal.data.apiUrl, modal.data.query]
+    [form, modal]
   );
 
   return (
