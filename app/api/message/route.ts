@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 const MESSAGE_BATCH = 10;
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
