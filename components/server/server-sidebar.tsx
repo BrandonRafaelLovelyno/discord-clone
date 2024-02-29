@@ -42,16 +42,12 @@ export type objType = "member" | "channel";
 
 const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
   const { data: session, status: sessionStatus } = useSession();
-  const {
-    data: serverData,
-    isLoading: serverLoading,
-    isValidating,
-  } = useServer({
+  const { data: serverData, isLoading: serverLoading } = useServer({
     serverId: serverId,
   });
   const usedServer: ServerWithChannelWithMemberWithProfile | undefined =
     useMemo(() => {
-      if (serverLoading || !serverData) {
+      if (serverLoading || !serverData?.data) {
         return undefined;
       }
       return (serverData as S_ServerWithRoleResponse).data.server;
@@ -64,7 +60,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
     }
   }, [serverLoading, serverData]);
   const channelPerType = useMemo(() => {
-    if (serverLoading || !usedServer) {
+    if (!usedServer) {
       return [];
     } else {
       const server = usedServer;
@@ -85,9 +81,9 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
       });
       return [text, audio, video];
     }
-  }, [serverLoading, usedServer]);
+  }, [usedServer]);
   const body: React.ReactElement = useMemo(() => {
-    if (serverLoading || !usedServer || sessionStatus !== "authenticated") {
+    if (!usedServer || sessionStatus !== "authenticated") {
       return (
         <MotionDivUp key="loader">
           <PuffLoader height={60} width={60} />
@@ -130,7 +126,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
             <ServerSearch data={[...channelData, memberData]} />
             <Separator className="my-4 rounded-md bg-zinc-200 dark:bg-zinc-700" />
             {channelPerType.map((cT, index) => (
-              <>
+              <div key={index}>
                 <ServerSection
                   label={
                     index == 0
@@ -165,7 +161,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
                     />
                   </MotionDivUp>
                 ))}
-              </>
+              </div>
             ))}
             <ServerSection
               label="Server Members"
@@ -190,7 +186,7 @@ const ServerSideBar: React.FC<ServerSideBarProps> = ({ serverId }) => {
         </MotionDivUp>
       );
     }
-  }, [serverLoading, channelPerType, role, session, sessionStatus, usedServer]);
+  }, [channelPerType, role, session, sessionStatus, usedServer]);
   return (
     <div className="dark:bg-[#2B2D31] bg-[#F2F3F5] h-full w-full flex flex-col justify-center items-center">
       {body}

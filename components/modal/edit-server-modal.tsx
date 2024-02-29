@@ -41,7 +41,6 @@ const formSchema = z.object({
 
 const EditServerModal = () => {
   const { mutate } = useSWRConfig();
-  const { data: session } = useSession();
   const modal = useModal();
   const form = useForm({
     defaultValues: {
