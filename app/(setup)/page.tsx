@@ -24,22 +24,41 @@ export default function Home() {
         }
       } else {
         return (
-          <div className="flex flex-col items-center justify-center gap-y-8">
+          <>
             <Image
-              src={"/discord-logo.png"}
-              width={200}
-              height={200}
+              src={"/wallpaper.png"}
               alt="discord logo"
+              fill
+              objectFit="cover"
             />
-            <div
-              className="relative flex flex-row items-center justify-between px-10 py-4 font-bold text-white bg-purple-900 rounded-lg cursor-pointer gap-x-10 bg-opacity-40"
-              onClick={() => signIn("google", {}, { prompt: "login" })}
-            >
-              <FaGoogle size={20} />
-              <p>Login with google account</p>
-              <div />
+            <div className="relative flex flex-col items-center justify-center gap-y-8">
+              <div className="flex flex-row items-center justify-center gap-x-5">
+                <Image
+                  src={"/discord-logo.png"}
+                  width={100}
+                  height={100}
+                  alt="discord"
+                />
+                <div className="flex flex-col gap-y-0">
+                  <p className="text-5xl font-bold">Discord</p>
+                  <p className="font-bold">Clone</p>
+                </div>
+              </div>
+              <div
+                className="relative flex flex-row items-center justify-between px-10 py-4 font-bold text-black bg-white rounded-lg cursor-pointer gap-x-10"
+                onClick={() => signIn("google", {}, { prompt: "login" })}
+              >
+                <Image
+                  src={"/google-logo.png"}
+                  height={20}
+                  width={20}
+                  alt="google"
+                />
+                <p>Login with google account</p>
+                <div />
+              </div>
             </div>
-          </div>
+          </>
         );
       }
     }
@@ -47,7 +66,7 @@ export default function Home() {
   return (
     <MotionDivPage
       key={"set-up-screen"}
-      className="flex flex-col items-center justify-center h-full"
+      className="relative flex flex-col items-center justify-center h-full"
     >
       {body}
     </MotionDivPage>
