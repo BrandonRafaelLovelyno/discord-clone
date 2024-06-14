@@ -85,9 +85,9 @@ export default async function handler(
         },
       },
     });
-    const socketKey = `channel:${channelId}:message`;
+    // const socketKey = `channel:${channelId}:message`;
 
-    res.socket.server.io.emit(socketKey, message);
+    // res.socket.server.io.emit(socketKey, message);
     return res.status(200).json({
       success: true,
       message: "",

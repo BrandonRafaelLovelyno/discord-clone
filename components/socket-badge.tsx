@@ -5,10 +5,14 @@ import { useSocket } from "./provider/socket-provider";
 import { Badge } from "./ui/badge";
 
 const SocketBadge = () => {
-  const socket = useSocket();
-  const className = "text-white border-none bg-emerald-600";
+  const { isConnected } = useSocket();
+  const className = isConnected
+    ? "text-white border-none bg-emerald-600"
+    : "text-white border-none bg-rose-600";
 
-  const text: string = "Live Real-time updates";
+  const text: string = isConnected
+    ? "Connected to socket"
+    : "Disconnected from socket";
 
   return (
     <Badge className={className} variant="outline">

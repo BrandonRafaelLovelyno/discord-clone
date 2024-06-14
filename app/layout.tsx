@@ -67,10 +67,10 @@ export default async function RootLayout({
                 }}
               />
               <main className="relative w-full h-screen overflow-hidden">
-                {/* <SocketProvider> */}
-                <ModalProvider />
-                <QueryProvider>{children}</QueryProvider>
-                {/* </SocketProvider> */}
+                <SocketProvider>
+                  <ModalProvider />
+                  <QueryProvider>{children}</QueryProvider>
+                </SocketProvider>
               </main>
             </AnimatePresence>
           </ThemeProvider>

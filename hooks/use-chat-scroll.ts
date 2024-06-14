@@ -19,9 +19,8 @@ const useChatScroll = ({
   useEffect(() => {
     const topDiv = topRef.current;
 
-    const handleScroll = () => {
+    const handleScroll: () => void = () => {
       if (topDiv?.scrollTop === 0 && shouldLoadMore) {
-        console.log("loading prev message");
         loadMore();
       }
     };
@@ -49,10 +48,10 @@ const useChatScroll = ({
       const distanceFromBottom =
         topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight;
 
-      return distanceFromBottom <= 200;
+      return distanceFromBottom <= 100;
     };
 
-    if (handleAutoScroll()) {
+    if (handleAutoScroll() && bottomDiv) {
       setTimeout(
         () =>
           bottomDiv?.scrollIntoView({
@@ -61,7 +60,7 @@ const useChatScroll = ({
         100
       );
     }
-  }, [bottomRef, topRef, count, hasInitialized]);
+  }, [bottomRef, topRef, topRef.current?.scrollTop, count, hasInitialized]);
 };
 
 export default useChatScroll;
