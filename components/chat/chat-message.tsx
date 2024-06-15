@@ -8,7 +8,6 @@ import useChatQuery from "@/hooks/use-chat-query";
 import { Loader2, ServerCrash } from "lucide-react";
 import { MessageWithMemberWithProfile } from "@/lib/types/collection";
 import ChatItem from "./chat-item";
-import useChatSocket from "@/hooks/use-chat-socket";
 import useChatScroll from "@/hooks/use-chat-scroll";
 
 interface ChatMessageProps {
@@ -54,8 +53,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     paramValue: chatId,
     queryKey,
   });
-
-  useChatSocket({ addKey, updateKey, queryKey });
 
   const topRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);

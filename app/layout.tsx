@@ -9,7 +9,6 @@ import { ThemeProvider } from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
 import { Toaster } from "react-hot-toast";
 import ModalProvider from "@/components/provider/modal-provider";
-import SocketProvider from "@/components/provider/socket-provider";
 import QueryProvider from "@/components/provider/query-provider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -67,10 +66,8 @@ export default async function RootLayout({
                 }}
               />
               <main className="relative w-full h-screen overflow-hidden">
-                <SocketProvider>
-                  <ModalProvider />
-                  <QueryProvider>{children}</QueryProvider>
-                </SocketProvider>
+                <ModalProvider />
+                <QueryProvider>{children}</QueryProvider>
               </main>
             </AnimatePresence>
           </ThemeProvider>

@@ -3,7 +3,7 @@ import React from "react";
 import MobileToggle from "../mobile-toggle";
 import MotionDivDown from "../animation/motion-div-down";
 import ProfileAvatar from "../profile-avatar";
-import SocketBadge from "../socket-badge";
+import ConnectivityBadge from "../connectivity-badge";
 import ChatVideoButton from "./chat-video-button";
 
 interface ChatHeaderProps {
@@ -35,7 +35,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         <div className="flex items-center gap-x-3">
           {type == "conversation" && <ChatVideoButton />}
 
-          <SocketBadge />
+          <ConnectivityBadge />
         </div>
       </div>
     </MotionDivDown>
