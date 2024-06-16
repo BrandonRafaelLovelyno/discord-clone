@@ -35,7 +35,7 @@ const ServerHeader: React.FC<ServerHeaderProps> = ({ server, role }) => {
     } else {
       modal.onOpen(undefined, { server });
     }
-  }, [server, modal]);
+  }, [server]);
   const title = useMemo(() => {
     if (!server.name) {
       return "...";
