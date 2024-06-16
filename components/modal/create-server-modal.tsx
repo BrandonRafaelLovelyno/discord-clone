@@ -78,7 +78,7 @@ const CreateServerModal = () => {
       onOpenChange={handleClose}
     >
       <MotionDivUp>
-        <DialogContent className="p-0 offset-0">
+        <DialogContent className="p-0 offset-0 max-w-[90%]">
           <DialogHeader className="pt-5">
             <DialogTitle className="text-center">Create server</DialogTitle>
             <DialogDescription className="text-center">

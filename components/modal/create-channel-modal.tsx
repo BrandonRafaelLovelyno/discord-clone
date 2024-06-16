@@ -77,7 +77,7 @@ const CreateChannelModal = () => {
         modal.onClose();
       }}
     >
-      <DialogContent className="p-0 offset-0">
+      <DialogContent className="p-0 offset-0 max-w-[90%]">
         <MotionDivUp>
           <DialogHeader className="pt-5 mb-5">
             <DialogTitle>Create channel</DialogTitle>

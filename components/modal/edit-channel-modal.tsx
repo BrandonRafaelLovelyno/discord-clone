@@ -85,7 +85,7 @@ const EditChannelModal = () => {
         modal.onClose();
       }}
     >
-      <DialogContent className="p-0 offset-0">
+      <DialogContent className="p-0 offset-0 max-w-[80%]">
         <MotionDivUp>
           <DialogHeader className="pt-5 mb-5">
             <DialogTitle>Edit channel</DialogTitle>

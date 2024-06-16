@@ -72,7 +72,7 @@ const DeleteChannelModal = () => {
       onOpenChange={handleClose}
     >
       <MotionDivUp>
-        <DialogContent className="p-0">
+        <DialogContent className="p-0 offset-0 max-w-[80%]">
           <DialogHeader className="pt-5">
             <DialogTitle className="text-center">Leave Server</DialogTitle>
             <DialogDescription className="text-center">

@@ -18,7 +18,7 @@ const MobileToggle: React.FC<MobileToggleProps> = ({ serverId }) => {
         </Button>
       </SheetTrigger>
       <SheetContent className="flex py-0 pr-0 w-fit" side="left">
-        <div className="w-[72px]">
+        <div className="w-[60px]">
           <NavigationBar />
         </div>
         <MotionDivUp key="server-sidebar" className="w-64 h-full">
