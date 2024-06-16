@@ -1,11 +1,11 @@
 import options from "@/lib/auth/option";
 import prismadb from "@/lib/orm/prismadb";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(options);
     if (!session) {

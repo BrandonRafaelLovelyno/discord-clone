@@ -40,6 +40,7 @@ import ColorRingLoader from "../loader/color-ring";
 import axios from "axios";
 import { MemberRole } from "@prisma/client";
 import { useSWRConfig } from "swr";
+import { useRouter } from "next/navigation";
 
 const roleIconMap = {
   GUEST: null,
@@ -48,6 +49,7 @@ const roleIconMap = {
 };
 
 const ServerMemberModal = () => {
+  const router = useRouter();
   const modal = useModal();
   const { mutate } = useSWRConfig();
   const [loadingId, setLoadingId] = useState<string>("");
@@ -63,6 +65,7 @@ const ServerMemberModal = () => {
         }
         mutate(`/api/server/${modal.data.server?.id}`);
         modal.onOpen("members", { server: res.data.data });
+        router.back();
         toast.success(`You have kicked ${name}`);
       } catch (err) {
         toast.error((err as Error).message);
@@ -70,7 +73,7 @@ const ServerMemberModal = () => {
         setLoadingId("");
       }
     },
-    [modal, mutate]
+    [modal, mutate, router]
   );
 
   const onChangeRole = useCallback(

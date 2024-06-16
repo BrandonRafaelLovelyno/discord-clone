@@ -1,9 +1,9 @@
 import prismadb from "@/lib/orm/prismadb";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { serverId: string } }
 ) {
   try {

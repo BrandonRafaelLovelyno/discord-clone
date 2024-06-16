@@ -37,10 +37,12 @@ interface ChatItemProps {
   timeStamp: string;
   isUpdated: boolean;
   isDeleted: boolean;
-  socketUrl: string;
-  socketQuery: Record<string, any>;
   fileUrl: string | null;
   member: MemberWithProfile;
+  endpoint: {
+    url: string;
+    query: Record<string, string>;
+  };
 }
 
 const roleIconMap: Record<MemberRole, React.ReactNode> = {
@@ -62,10 +64,9 @@ const ChatItem: React.FC<ChatItemProps> = ({
   timeStamp,
   isUpdated,
   isDeleted,
-  socketQuery,
-  socketUrl,
   fileUrl,
   member,
+  endpoint,
 }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -95,12 +96,12 @@ const ChatItem: React.FC<ChatItemProps> = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: `${socketUrl}/${id}`,
-        query: socketQuery,
+        url: `${endpoint.url}/${id}`,
+        query: endpoint.query,
       });
       const res = await axios.patch(url, values);
       if (!res.data) {
-        throw new Error("Failed to update with socket");
+        throw new Error("Failed to update message");
       }
       toast.success("Message edited");
       setIsEditing(false);
@@ -245,8 +246,8 @@ const ChatItem: React.FC<ChatItemProps> = ({
                 className="w-4 h-4 ml-auto transition cursor-pointer text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 "
                 onClick={() => {
                   modal.onOpen("deleteMessage", {
-                    apiUrl: `${socketUrl}/${id}`,
-                    query: socketQuery,
+                    apiUrl: `${endpoint.url}/${id}`,
+                    query: endpoint.query,
                   });
                 }}
               />

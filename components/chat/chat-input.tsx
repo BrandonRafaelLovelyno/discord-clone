@@ -14,16 +14,19 @@ import EmojiPicker from "../emoji-picker";
 
 interface ChatInputProps {
   name: string;
-  apiUrl: string;
   type: "conversation" | "channel";
   query: Record<string, string>;
+  endpoint: {
+    url: string;
+    query: Record<string, string>;
+  };
 }
 
 const formSchema = z.object({
   content: z.string().min(1),
 });
 
-const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ type, name, endpoint }) => {
   const modal = useModal();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,11 +36,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const url = qs.stringifyUrl({
-        url: apiUrl,
-        query,
+      const finalUrl = qs.stringifyUrl({
+        url: endpoint.url,
+        query: endpoint.query,
       });
-      const res = await axios.post<APIResponse>(url, values);
+      const res = await axios.post<APIResponse>(finalUrl, values);
       if (!res.data.success) {
         throw new Error(res.data.message);
       }
@@ -50,6 +53,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
+          disabled={form.formState.isSubmitting}
           name="content"
           control={form.control}
           render={({ field }) => (
@@ -62,8 +66,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ apiUrl, type, name, query }) => {
                     disabled={form.formState.isSubmitting}
                     onClick={() =>
                       modal.onOpen("messageFile", {
-                        apiUrl,
-                        query,
+                        apiUrl: endpoint.url,
+                        query: endpoint.query,
                       })
                     }
                   >

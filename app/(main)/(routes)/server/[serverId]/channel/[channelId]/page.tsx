@@ -61,26 +61,33 @@ const ChannelPage: React.FC<ChannelPageProps> = ({ params }) => {
               <div className="flex-1 overflow-hidden">
                 <ChatMessage
                   paramKey="channelId"
-                  apiUrl="/api/message"
                   chatId={params.channelId}
-                  socketQuery={{
-                    channelId: params.channelId,
-                    serverId: params.serverId,
+                  endpoint={{
+                    url: "/api/message",
+                    query: {
+                      channelId: params.channelId,
+                      serverId: params.serverId,
+                    },
                   }}
                   member={channelData.data.currentMember}
-                  socketUrl="/api/socket/message"
                   type="channel"
                   name={channelName}
                 />
               </div>
               <div>
                 <ChatInput
-                  apiUrl="/api/socket/message"
                   type="channel"
                   name={channelName.toLowerCase()}
                   query={{
                     serverId: params.serverId,
                     channelId: params.channelId,
+                  }}
+                  endpoint={{
+                    url: "/api/message",
+                    query: {
+                      channelId: params.channelId,
+                      serverId: params.serverId,
+                    },
                   }}
                 />
               </div>

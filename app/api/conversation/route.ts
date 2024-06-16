@@ -2,9 +2,9 @@ import options from "@/lib/auth/option";
 import { getOrCreateConversation } from "@/lib/conversation";
 import prismadb from "@/lib/orm/prismadb";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const memberId = url.searchParams.get("memberId");

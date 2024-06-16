@@ -9,6 +9,7 @@ import React, { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import MediaRoom from "@/components/media-room";
 import MotionDivUp from "@/components/animation/motion-div-up";
+import { url } from "inspector";
 
 interface MemberPageProps {
   params: {
@@ -41,26 +42,32 @@ const MemberPage: React.FC<MemberPageProps> = ({ params }) => {
             >
               <div className="w-full h-full">
                 <ChatMessage
-                  apiUrl={`/api/direct-message`}
                   chatId={conversationData.data.conversation.id}
                   member={conversationData.data.currentMember}
                   name={conversationData.data.otherMember.profile.name}
                   paramKey={"conversationId"}
-                  socketQuery={{
-                    conversationId: conversationData.data.conversation.id,
+                  endpoint={{
+                    url: "/api/direct-message",
+                    query: {
+                      conversationId: conversationData.data.conversation.id,
+                    },
                   }}
-                  socketUrl="/api/socket/direct-message"
                   type="conversation"
                   key={`${params.serverId}${params.memberId}`}
                 />
               </div>
               <ChatInput
-                apiUrl={`/api/socket/direct-message`}
                 name={conversationData.data.otherMember.profile.name}
                 query={{
                   conversationId: conversationData.data.conversation.id,
                 }}
                 type="conversation"
+                endpoint={{
+                  url: "/api/direct-message",
+                  query: {
+                    conversationId: conversationData.data.conversation.id,
+                  },
+                }}
               />
             </MotionDivUp>
           </div>

@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prismadb from "@/lib/orm/prismadb";
 import { v4 as uuidv4 } from "uuid";
 import { ChannelType, MemberRole } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import options from "@/lib/auth/option";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const { name, imageUrl } = await req.json();
     if (!name || !imageUrl) {
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(options);
     if (!session) {

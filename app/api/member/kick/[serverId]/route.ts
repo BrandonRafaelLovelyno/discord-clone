@@ -1,10 +1,10 @@
 import options from "@/lib/auth/option";
 import prismadb from "@/lib/orm/prismadb";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { serverId: string } }
 ) {
   try {

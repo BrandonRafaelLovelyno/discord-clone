@@ -81,3 +81,62 @@ export async function GET(req: NextRequest) {
     });
   }
 }
+
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getServerSession(options);
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+    const url = new URL(req.url);
+    const serverId = url.searchParams.get("serverId");
+    const channelId = url.searchParams.get("channelId");
+    if (!channelId || !serverId) {
+      throw new Error("Missing fields");
+    }
+    const { content, fileUrl } = await req.json();
+    if (!content || !serverId || !channelId) {
+      throw new Error("Missing fields");
+    }
+    const currentMember = await prismadb.member.findFirst({
+      where: {
+        profileId: session.user.profileId,
+        serverId: serverId,
+      },
+    });
+    if (!currentMember) {
+      throw new Error("Member not found");
+    }
+    const newMessage = await prismadb.message.create({
+      data: {
+        content,
+        fileUrl,
+        channelId,
+        memberId: currentMember.id,
+      },
+      include: {
+        member: {
+          include: {
+            profile: true,
+          },
+        },
+      },
+    });
+    return NextResponse.json({
+      data: {
+        message: newMessage,
+      },
+      message: "",
+      success: true,
+    });
+  } catch (err) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: (err as Error).message,
+        data: {},
+      },
+      { status: 400 }
+    );
+  }
+}

@@ -2,9 +2,9 @@ import options from "@/lib/auth/option";
 import prismadb from "@/lib/orm/prismadb";
 import { ChannelType, MemberRole } from "@prisma/client";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(options);
     if (!session) {

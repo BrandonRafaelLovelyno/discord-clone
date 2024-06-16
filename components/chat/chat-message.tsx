@@ -11,23 +11,22 @@ import ChatItem from "./chat-item";
 import useChatScroll from "@/hooks/use-chat-scroll";
 
 interface ChatMessageProps {
-  apiUrl: string;
-  socketUrl: string;
+  endpoint: {
+    url: string;
+    query: { [key: string]: string };
+  };
   chatId: string;
   type: "conversation" | "channel";
   name: string;
   paramKey: "channelId" | "conversationId";
-  socketQuery: Record<string, any>;
   member: Member;
 }
 
 const DATE_FORMAT = "d MM yyyy, HH:mm";
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
-  apiUrl,
+  endpoint,
   paramKey,
-  socketQuery,
-  socketUrl,
   chatId,
   type,
   member,
@@ -48,7 +47,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     isFetchingNextPage,
     status,
   } = useChatQuery({
-    apiUrl,
+    apiUrl: endpoint.url,
     paramKey,
     paramValue: chatId,
     queryKey,
@@ -126,8 +125,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                     isDeleted={msg.deleted}
                     isUpdated={msg.updatedAt !== msg.createdAt}
                     member={msg.member}
-                    socketQuery={socketQuery}
-                    socketUrl={socketUrl}
+                    endpoint={endpoint}
                     timeStamp={format(new Date(msg.createdAt), DATE_FORMAT)}
                     key={`${msg.id} ${msg.updatedAt}`}
                   />
